@@ -135,6 +135,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  square_calendar:
+    dependency: "direct main"
+    description:
+      name: square_calendar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   stack_trace:
     dependency: transitive
     description:
@@ -193,3 +200,4 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
+  flutter: ">=0.10.1"
