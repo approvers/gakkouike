@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gakkouike/data_manager/subject_adder.dart';
 
 // 自作モジュール
 import 'calendar/calendar.dart';
@@ -39,39 +40,79 @@ class _HomePageState extends State<HomePage>{
       floatingActionButton:
         FoldFloatButtonWrap(
           isExpanded: isExpanded,
-          floatButton: FloatingActionButton(
-            child: isExpanded ? Icon(Icons.close) : Icon(Icons.menu),
-            backgroundColor: Colors.deepOrangeAccent,
-            onPressed: (){
-              setState(() {
-                isExpanded ^= true;
-              });
-            },
-          ),
-          expandedWidget: <Widget>[
-            FloatingActionButton(
-              child: Icon(Icons.calendar_today, size: 16,),
+          floatButton:
+          Container(
+            child: FloatingActionButton(
+              child: isExpanded ? Icon(Icons.close) : Icon(Icons.menu),
               backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
               onPressed: (){
                 setState(() {
                   isExpanded ^= true;
-                  CalendarRootView();
                 });
               },
             ),
-            SizedBox(height: 4,),
-            FloatingActionButton(
-              child: Icon(Icons.add),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: (){
-                setState(() {
-                  isExpanded ^= true;
+            height: 60,
+            width: 60,
+          ),
+          expandedWidget: <Widget>[
+            Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text("カレンダー"),
+                    SizedBox(height: 28,),
+                    Text("教科追加"),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    FloatingActionButton(
+                      child: Icon(Icons.calendar_today, size: 20,),
+                      backgroundColor: Colors.deepOrangeAccent,
+                      mini: true,
+                      onPressed: (){
+                        setState(() {
+                          isExpanded ^= true;
+                          Navigator.of(context).push(
+                              new MaterialPageRoute(
+                                  builder: (BuildContext context) => new CalendarRootView()
+                              )
+                          );
+                        });
+                      },
+                      heroTag: "calendar",
+                    ),
+                    SizedBox(height: 4,),
+                    FloatingActionButton(
+                      child: Icon(Icons.add, size: 20,),
+                      backgroundColor: Colors.deepOrangeAccent,
+                      mini: true,
+                      onPressed: (){
+                        setState(() {
+                          isExpanded ^= true;
+                          Navigator.of(context).push(
+                              new MaterialPageRoute(
+                                  builder: (BuildContext context) => new SubjectAdder()
+                              )
+                          );
+                        });
+                      },
+                      heroTag: "adder",
+                    ),
+                  ],
+                )
 
-                });
-              },
-            )
+              ],
+            ),
+
+
+            Row(
+              children: <Widget>[
+
+
+              ],
+            ),
+
           ],
         ),
     );
