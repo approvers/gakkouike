@@ -55,17 +55,9 @@ class _HomePageState extends State<HomePage>{
             width: 60,
           ),
           expandedWidget: <Widget>[
-            Row(
-              children: <Widget>[
-                Column(
+                Row(
                   children: <Widget>[
                     Text("カレンダー"),
-                    SizedBox(height: 28,),
-                    Text("教科追加"),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
                     FloatingActionButton(
                       child: Icon(Icons.calendar_today, size: 20,),
                       backgroundColor: Colors.deepOrangeAccent,
@@ -82,7 +74,13 @@ class _HomePageState extends State<HomePage>{
                       },
                       heroTag: "calendar",
                     ),
-                    SizedBox(height: 4,),
+                  ],
+                ),
+                SizedBox(height: 4,),
+                Row(
+                  children: <Widget>[
+                    Text("教科追加"),
+                    SizedBox(width: 13,),
                     FloatingActionButton(
                       child: Icon(Icons.add, size: 20,),
                       backgroundColor: Colors.deepOrangeAccent,
@@ -102,19 +100,12 @@ class _HomePageState extends State<HomePage>{
                   ],
                 )
 
-              ],
-            ),
-
-
-            Row(
-              children: <Widget>[
 
 
               ],
             ),
 
-          ],
-        ),
+
     );
   }
 }
