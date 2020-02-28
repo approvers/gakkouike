@@ -57,7 +57,10 @@ class _HomePageState extends State<HomePage>{
           expandedWidget: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text("カレンダー"),
+                    SizedBox(
+                      width: 80,
+                      child: Text("カレンダー"),
+                    ),
                     FloatingActionButton(
                       child: Icon(Icons.calendar_today, size: 20,),
                       backgroundColor: Colors.deepOrangeAccent,
@@ -76,11 +79,12 @@ class _HomePageState extends State<HomePage>{
                     ),
                   ],
                 ),
-                SizedBox(height: 4,),
                 Row(
                   children: <Widget>[
-                    Text("教科追加"),
-                    SizedBox(width: 13,),
+                    SizedBox(
+                      width: 80,
+                      child: Text("教科追加"),
+                    ),
                     FloatingActionButton(
                       child: Icon(Icons.add, size: 20,),
                       backgroundColor: Colors.deepOrangeAccent,
@@ -96,6 +100,30 @@ class _HomePageState extends State<HomePage>{
                         });
                       },
                       heroTag: "adder",
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 80,
+                      child: Text("設定"),
+                    ),
+                    FloatingActionButton(
+                      child: Icon(Icons.settings, size: 20,),
+                      backgroundColor: Colors.deepOrangeAccent,
+                      mini: true,
+                      onPressed: (){
+                        setState(() {
+                          isExpanded ^= true;
+                          Navigator.of(context).push(
+                              new MaterialPageRoute(
+                                  builder: (BuildContext context) => new ConfigRootView()
+                              )
+                          );
+                        });
+                      },
+                      heroTag: "config",
                     ),
                   ],
                 )
