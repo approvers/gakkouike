@@ -106,9 +106,10 @@ class FoldFloatButtonWrap extends StatelessWidget {
       overflow: Overflow.visible,
       children: <Widget>[
         // 背景
+        isExpanded ?
         Positioned(
-          top: 0,
-          left: 0,
+          top: -32,
+          left: -32,
           right: -32,
           bottom: -32,
           child: FoldAnimationWrap(
@@ -118,11 +119,11 @@ class FoldFloatButtonWrap extends StatelessWidget {
               color: Color.fromARGB(50, 0, 0, 0),
             ),
           ),
-        ),
+        ) : Container(),
 
         Positioned(
-          bottom: 0,
-          right: 0,
+          bottom: -10,
+          right: -10,
           child: Column(
             children: <Widget>[
               FoldAnimationWrap(

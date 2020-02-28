@@ -34,9 +34,8 @@ class _HomePageState extends State<HomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("学校行け")),
-      body: Container(
-        child: CounterRootView()
-      ),
+      body: CounterRootView()
+      ,
       floatingActionButton:
         FoldFloatButtonWrap(
           isExpanded: isExpanded,
