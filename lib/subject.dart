@@ -8,7 +8,9 @@ class Subject {
   /// 予定されている授業の数
   int _scheduledClassNum;
 
-  Subject(this.name, this._absenceDates, this._scheduledClassNum);
+  Subject(this.name, this._scheduledClassNum){
+    this._absenceDates = new List();
+  }
 
   /// getter
   int get scheduledClassNum => _scheduledClassNum;
