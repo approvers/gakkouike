@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage>{
     return Scaffold(
       appBar: AppBar(title: Text("学校行け")),
       body: Container(
-        child: Text("はよ実装しろカス"),
+        child: CounterRootView()
       ),
       floatingActionButton:
         FoldFloatButtonWrap(
