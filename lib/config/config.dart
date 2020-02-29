@@ -6,10 +6,28 @@ class ConfigRootView extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(title: Text("あとでなんとかする"),),
       body: Container(
-        child: Center(
-          child: Text("まだだよカス"),
-        ),
+        child: _ConfigPage()
       ),
     );
+  }
+}
+
+class _ConfigPage extends StatefulWidget {
+  @override
+  _ConfigPageState createState() => _ConfigPageState();
+}
+
+class _ConfigPageState extends State<_ConfigPage>{
+  //TODO: 実装しろカス
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: loadConfig(),
+    );
+  }
+
+  Future<Widget> loadConfig(){
+    // ここにロード処理
+
   }
 }
