@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gakkouike/data_manager/subject_adder.dart';
+import 'package:gakkouike/subject_pref_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 自作モジュール
 import 'calendar/calendar.dart';
 import 'counter/counter.dart';
 import 'config/config.dart';
 import 'CustomFAB/cool.dart';
+import 'config.dart';
+import 'subject.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,7 +40,20 @@ class _HomePageState extends State<HomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("学校行け")),
-      body: CounterRootView()
+      body: FutureBuilder(
+        future: loadData(),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(snapshot.hasData){
+            return snapshot.data;
+          }else if(snapshot.hasError){
+            return Text(snapshot.error.toString());
+          }else{
+            return Container(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      )
       ,
       floatingActionButton:
         FoldFloatButtonWrap(
@@ -131,8 +150,36 @@ class _HomePageState extends State<HomePage>{
 
               ],
             ),
+    );
+  }
 
+  Future loadData()async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String rawConfig = pref.getString("config");
+    Config config;
+    print(rawConfig);
 
+    if (rawConfig == null){
+      config = new Config(endClass: null, startClass: null);
+      print("ok");
+    }else {
+      var jsonConfig = jsonDecode(rawConfig);
+      config = Config.fromJson(jsonConfig);
+    }
+    List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+    if (subjects == []){
+      return Text("教科を登録してください");
+    }
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index){
+        return CounterRootView(
+          subject: subjects[index],
+          smartSet: config.smartSet,
+          smartDelete: config.smartDelete,
+          index: index,
+        );
+      },
+      itemCount: subjects.length,
     );
   }
 }

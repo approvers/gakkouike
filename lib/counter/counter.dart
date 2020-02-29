@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
+import '../subject.dart';
+import 'package:gakkouike/subject_pref_util.dart';
 
 class CounterRootView extends StatefulWidget {
+  CounterRootView(
+      {
+        this.subject,
+        this.index,
+        @required this.smartSet,
+        @required this.smartDelete
+      }
+  );
+  final Subject subject;
+  final bool smartSet;
+  final bool smartDelete;
+  final int index;
   @override
-  _CounterRootViewState createState() => _CounterRootViewState();
+  _CounterRootViewState createState() =>
+      _CounterRootViewState(
+    subject: subject,
+    smartSet: smartSet,
+    smartDelete: smartDelete,
+    index: index
+  );
 }
 
 class _CounterRootViewState extends State<CounterRootView>{
   _CounterRootViewState(
       {
-        this.subjectName = "subjectName",
-        this.absencePer = 0.0,
-        this.absenceCount = 0
+        this.subject,
+        this.index,
+        this.smartSet,
+        this.smartDelete
       }
   );
-  final String subjectName;
-  final double absencePer;
-  final int absenceCount;
+
+  Subject subject;
+  final bool smartSet;
+  final bool smartDelete;
+  final int index;
+
   int a = 0;
   @override
   Widget build(BuildContext context) {
@@ -40,7 +64,7 @@ class _CounterRootViewState extends State<CounterRootView>{
                     ),
                     SizedBox(
                       child: Text(
-                        subjectName,
+                        subject.name,
                         style: TextStyle(fontSize: 28,),
                       ),
                       width: size.width * 0.45,
@@ -48,9 +72,9 @@ class _CounterRootViewState extends State<CounterRootView>{
                     Divider(),
                     Row(
                       children: [
-                        Text("欠課率 : $absencePer%"),
+                        Text("欠課率 : ${(subject.absenceDates.dateTimeList.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
                         SizedBox(width: 10,),
-                        Text("欠課時数 : $absenceCount")
+                        Text("欠課時数 : ${subject.absenceDates.dateTimeList.length}")
                         ]
                     )
                   ]),
@@ -63,8 +87,19 @@ class _CounterRootViewState extends State<CounterRootView>{
                     Card(
                       child: IconButton(
                         icon: Icon(Icons.add, size: 25),
-                        onPressed: (){
+                        onPressed: () async{
                           print("Pressed");
+                          if(smartSet){
+                            DateTime n = DateTime.now();
+                            List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                            print(index);
+                            subjects[index].absenceDates.dateTimeList.add(DateTime(n.year, n.month, n.day));
+                            await SubjectPreferenceUtil.saveSubjectList(subjects);
+                            subject = subjects[index];
+                          }
+                          setState(() {
+
+                          });
                         },
                       ),
                       color: Colors.greenAccent,
@@ -75,8 +110,18 @@ class _CounterRootViewState extends State<CounterRootView>{
                     Card(
                       child: IconButton(
                         icon: Icon(Icons.remove, size: 25,),
-                        onPressed: (){
+                        onPressed: () async{
                           print("Pressed");
+                          if(smartDelete){
+                            List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                            subjects[index].absenceDates.dateTimeList.removeLast();
+                            await SubjectPreferenceUtil.saveSubjectList(subjects);
+                            subject = subjects[index];
+                          }
+
+                          setState(() {
+
+                          });
                         },
                       ),
                       color: Colors.redAccent,
