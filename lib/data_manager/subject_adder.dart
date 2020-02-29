@@ -88,8 +88,8 @@ class _SubjectAdder extends StatelessWidget {
 
                 // TODO: ストレージに書き込む
                 Subject generated = new Subject(
-                    nameTextController.text,
-                    int.parse(numberTextController.text)
+                    name: nameTextController.text,
+                    scheduledClassNum: int.parse(numberTextController.text)
                 );
                 print(generated.name);
                 Navigator.pop(context);

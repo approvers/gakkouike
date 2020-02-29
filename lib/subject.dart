@@ -4,16 +4,11 @@ class Subject {
   /// 教科の名前
   String name;
   /// 休んだ日
-  List<DateTime> _absenceDates;
+  List<DateTime> absenceDates;
   /// 予定されている授業の数
-  int _scheduledClassNum;
+  int scheduledClassNum;
 
-  Subject(this.name, this._scheduledClassNum){
-    this._absenceDates = new List();
+  Subject({this.name, this.absenceDates, this.scheduledClassNum}){
+    this.absenceDates ??= new List<DateTime>();
   }
-
-  /// getter
-  int get scheduledClassNum => _scheduledClassNum;
-  List<DateTime> get absenceDates => _absenceDates;
-
 }
