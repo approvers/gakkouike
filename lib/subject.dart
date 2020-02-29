@@ -4,14 +4,21 @@ class Subject {
   /// 教科の名前
   String name;
   /// 休んだ日
-  List<DateTime> _absenceDates;
+  List<DateTime> absenceDates;
   /// 予定されている授業の数
-  int _scheduledClassNum;
+  int scheduledClassNum;
 
-  Subject(this.name, this._absenceDates, this._scheduledClassNum);
+  Subject({this.name, this.absenceDates, this.scheduledClassNum}){
+    this.absenceDates ??= new List<DateTime>();
+  }
+  Subject.fromJson(Map<String, dynamic> json)
+    : name              = json["name"],
+      absenceDates      = json["absenceDates"],
+      scheduledClassNum = json["scheduledClassNum"];
 
-  /// getter
-  int get scheduledClassNum => _scheduledClassNum;
-  List<DateTime> get absenceDates => _absenceDates;
-
+  Map<String, dynamic> toJson() => {
+    "name"              : name,
+    "absenceDates"      : absenceDates,
+    "scheduledClassNum" : scheduledClassNum
+  };
 }
