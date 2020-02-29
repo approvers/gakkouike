@@ -11,4 +11,14 @@ class Subject {
   Subject({this.name, this.absenceDates, this.scheduledClassNum}){
     this.absenceDates ??= new List<DateTime>();
   }
+  Subject.fromJson(Map<String, dynamic> json)
+    : name              = json["name"],
+      absenceDates      = json["absenceDates"],
+      scheduledClassNum = json["scheduledClassNum"];
+
+  Map<String, dynamic> toJson() => {
+    "name"              : name,
+    "absenceDates"      : absenceDates,
+    "scheduledClassNum" : scheduledClassNum
+  };
 }
