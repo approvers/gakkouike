@@ -33,13 +33,16 @@ class SubjectPreferenceUtil{
 
   /// SharedPreference上のsubjectListにSubjectを追加します
   static void addSubject(Subject subject) async{
-    getSubjectListFromPref().then(
-        (List<Subject> list) {
-          list.add(subject);
-          saveSubjectList(list);
-        }
-    );
+    List<Subject> list = await getSubjectListFromPref();
+    list.add(subject);
+    saveSubjectList(list);
   }
 
+  static Future<Subject> deleteSubjectAt(int index) async{
+    List<Subject> subjectLists = await getSubjectListFromPref();
+    Subject deletedSubject = subjectLists.removeAt(index);
+    saveSubjectList(subjectLists);
+    return deletedSubject;
+  }
 
 }
