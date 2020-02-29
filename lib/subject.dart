@@ -1,24 +1,26 @@
+import 'dtlistJsonHelper.dart';
+
 /// 教科ごとの欠課を管理するクラス。
 class Subject {
 
   /// 教科の名前
   String name;
   /// 休んだ日
-  List<DateTime> absenceDates;
+  DateTimeListJsonHelper absenceDates;
   /// 予定されている授業の数
   int scheduledClassNum;
 
   Subject({this.name, this.absenceDates, this.scheduledClassNum}){
-    this.absenceDates ??= new List<DateTime>();
+    this.absenceDates ??= new DateTimeListJsonHelper();
   }
   Subject.fromJson(Map<String, dynamic> json)
     : name              = json["name"],
-      absenceDates      = json["absenceDates"],
+      absenceDates      = DateTimeListJsonHelper.castFromJson(json["absenceDates"]),
       scheduledClassNum = json["scheduledClassNum"];
 
   Map<String, dynamic> toJson() => {
     "name"              : name,
-    "absenceDates"      : absenceDates,
+    "absenceDates"      : absenceDates.splitListToYMD(),
     "scheduledClassNum" : scheduledClassNum
   };
 }

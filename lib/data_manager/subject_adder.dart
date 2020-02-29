@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gakkouike/dtlistJsonHelper.dart';
 
 import '../subject.dart';
 
@@ -89,9 +90,12 @@ class _SubjectAdder extends StatelessWidget {
                 // TODO: ストレージに書き込む
                 Subject generated = new Subject(
                     name: nameTextController.text,
+                    absenceDates: DateTimeListJsonHelper(
+                        dateTimeList: [
+                        ]
+                    ),
                     scheduledClassNum: int.parse(numberTextController.text)
                 );
-                print(generated.name);
                 Navigator.pop(context);
               }
             )
