@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage>{
                           isExpanded ^= true;
                           Navigator.of(context).push(
                               new MaterialPageRoute(
-                                  builder: (BuildContext context) => new CalendarRootView()
+                                  builder: (BuildContext context) => new CalendarExample()
                               )
                           );
                         });
@@ -171,16 +171,13 @@ class _HomePageState extends State<HomePage>{
     }else {
       var jsonConfig = jsonDecode(rawConfig);
       config = Config.fromJson(jsonConfig);
-      print(jsonConfig);
     }
-    print(config is Config);
     List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
     if (subjects == []){
       return Text("教科を登録してください");
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index){
-        print("${index.toString()}: ${config.smartSet}");
         return view(
           context,
           subjects[index],
@@ -194,7 +191,6 @@ class _HomePageState extends State<HomePage>{
 
   Widget view(BuildContext context, Subject subject, Config config, int index) {
     Size size = MediaQuery.of(context).size;
-    print(config.smartSet);
     return Center(
       child: Column(
         children: <Widget>[
@@ -294,7 +290,6 @@ class _HomePageState extends State<HomePage>{
                                         ),
                                         onTap: ()async{
                                           List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                                          print(subjects[index].absenceDates.dateTimeList);
                                           subjects[index].absenceDates.dateTimeList.removeAt(i);
                                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                                           subject = subjects[index];
