@@ -7,7 +7,7 @@ class DateTimeListJsonHelper {
   }
 
   List<Map<String, int>> splitListToYMD(){
-    List<Map<String, int>> return_val = [];
+    List<Map<String, int>> returnVal = [];
 
     for(DateTime dateTime in this.dateTimeList){
       Map<String, int> map = {
@@ -15,28 +15,28 @@ class DateTimeListJsonHelper {
         "month": dateTime.month,
         "day": dateTime.day
       };
-      return_val.add(map);
+      returnVal.add(map);
     }
 
-    return return_val;
+    return returnVal;
 
   }
 
   static DateTimeListJsonHelper castFromJson(json) {
-    DateTimeListJsonHelper return_val = new DateTimeListJsonHelper();
+    DateTimeListJsonHelper returnVal = new DateTimeListJsonHelper();
 
     // JSONからもらったデータがnullなら、新しいものを渡す
     if(json == null){
-      return return_val;
+      return returnVal;
     }
     for(var elem in json){
       DateTime convertedDt = new DateTime(
         elem["year"], elem["month"], elem["day"]
       );
-      return_val.dateTimeList.add(convertedDt);
+      returnVal.dateTimeList.add(convertedDt);
     }
 
-    return return_val;
+    return returnVal;
 
   }
 
