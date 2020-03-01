@@ -126,6 +126,7 @@ class FoldFloatButtonWrap extends StatelessWidget {
           right: -10,
           child: Column(
             children: <Widget>[
+              isExpanded ?
               FoldAnimationWrap(
                 isExpanded: isExpanded,
                 duration: foldAnimationDuration,
@@ -137,7 +138,7 @@ class FoldFloatButtonWrap extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   )
                 ),
-              ),
+              ) : Container(),
               floatButton
             ],
           ),

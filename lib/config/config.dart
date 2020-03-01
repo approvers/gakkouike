@@ -47,7 +47,7 @@ class _ConfigPageState extends State<ConfigRootView>{
             String json = jsonEncode(rawJson);
             pref.setString("config", json);
           }
-          Navigator.of(context).pop();
+          Navigator.pop(context);
         },
       ),
     );
