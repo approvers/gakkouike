@@ -38,7 +38,61 @@ class _HomePageState extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("学校行け")),
+      appBar: AppBar(
+        title: Text("学校行け"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: () async{
+              List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+              showDialog(
+                context: context,
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    title: Text("削除する教科を選択"),
+                    content: ListView.builder(
+                      itemCount: subjects.length,
+                      itemBuilder: (BuildContext context, int index){
+                        return GestureDetector(
+                          child: ListTile(
+                            title: Text(subjects[index].name),
+                          ),
+                          onTap: (){
+                            showDialog<bool>(
+                              context: context,
+                              builder: (_){
+                                return AlertDialog(
+                                  title: Text("本当に削除してもいいですか?"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("No"),
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                    ),
+                                    FlatButton(
+                                      child: Text("Yes"),
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                    )
+                                  ],
+                                );
+                              }
+                            ).then((v){
+                              if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
+                              Navigator.pop(context);
+                              setState(() {
+
+                              });
+                            });
+                          },
+                        );
+                      }
+                    ),
+                  );
+                }
+              );
+            },
+          )
+        ],
+      ),
       body: FutureBuilder(
         future: loadData(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
