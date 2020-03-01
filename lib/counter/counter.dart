@@ -64,7 +64,6 @@ class _CounterRootViewState extends State<CounterRootView>{
                       child: IconButton(
                         icon: Icon(Icons.add, size: 25),
                         onPressed: (){
-                          print("Pressed");
                         },
                       ),
                       color: Colors.greenAccent,
@@ -76,7 +75,6 @@ class _CounterRootViewState extends State<CounterRootView>{
                       child: IconButton(
                         icon: Icon(Icons.remove, size: 25,),
                         onPressed: (){
-                          print("Pressed");
                         },
                       ),
                       color: Colors.redAccent,

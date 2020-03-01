@@ -35,10 +35,13 @@ class Config{
         this.winterVacationLength = 0,
         this.alertLine            = 0.6,
         this.redLine              = 0.7,
-        @required this.startClass,
-        @required this.endClass,
+        this.startClass,
+        this.endClass,
       }
-  );
+  ){
+    this.startClass = DateTime(2019);
+    this.endClass = DateTime(2019);
+  }
 
   Config.fromJson(Map<String, dynamic> json)
     : smartSet             = json["smartSet"],
@@ -47,8 +50,16 @@ class Config{
       winterVacationLength = json["winterVacationLength"],
       alertLine            = json["alertLine"],
       redLine              = json["redLine"],
-      startClass           = json["startClass"],
-      endClass             = json["endClass"];
+      startClass           = DateTime(
+        json["startClassYear"],
+        json["startClassMonth"],
+        json["startClassDay"]
+      )/*json["startClass"]*/,
+      endClass             = DateTime(
+        json["endClassYear"],
+        json["endClassMonth"],
+        json["endClassDay"]
+      )/*json["endClass"]*/;
 
   Map<String, dynamic> toJson() => {
     "smartSet"             : smartSet,
@@ -57,7 +68,14 @@ class Config{
     "winterVacationLength" : winterVacationLength,
     "alertLine"            : alertLine,
     "redLine"              : redLine,
+    "startClassYear"       : startClass.year,
+    "startClassMonth"      : startClass.month,
+    "startClassDay"        : startClass.day,
+    "endClassYear"         : endClass.year,
+    "endClassMonth"        : endClass.month,
+    "endClassDay"          : endClass.day
+    /*
     "startClass"           : startClass,
-    "endClass"             : endClass
+    "endClass"             : endClass*/
   };
 }
