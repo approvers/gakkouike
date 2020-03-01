@@ -15,18 +15,22 @@ class SubjectPreferenceUtil{
       return [];
     }
 
+    if(pref.getString("subjectList") == ""){
+      return [];
+    }
+    print("ok");
     List<dynamic> jsonList = json.decode(pref.getString("subjectList"));
     List<Subject> subjectList = [];
 
     for(Map<String, dynamic> json in jsonList){
       subjectList.add(Subject.fromJson(json));
     }
-
+    print(subjectList[0].absenceDates.dateTimeList);
     return subjectList;
   }
 
   /// SharedPreferenceにsubjectList(と等価のJSON)を保存します
-  static void saveSubjectList(List<Subject> subjectList) async{
+  static Future saveSubjectList(List<Subject> subjectList) async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("subjectList", jsonEncode(subjectList));
   }
