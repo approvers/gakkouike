@@ -11,6 +11,7 @@ import 'config/config.dart';
 import 'CustomFAB/cool.dart';
 import 'config.dart';
 import 'subject.dart';
+import 'config/inital_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,6 +36,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>{
   bool isExpanded = false;
+  bool setting = false;
   Config config;
 
   @override
@@ -159,20 +161,28 @@ class _HomePageState extends State<HomePage>{
     String rawConfig = pref.getString("config");
 
     if (rawConfig == null){
-      config = new Config(endClass: null, startClass: null);
+      if (setting) return Container();
+      setting = true;
+      Navigator.of(context).push(
+        new MaterialPageRoute(
+          builder: (BuildContext context) => InitialConfigPage()
+        )
+      ).then<void>((_){
+        setting = false;
+      });
+      return Container(
+        child: CircularProgressIndicator(),
+      );
     }else {
       var jsonConfig = jsonDecode(rawConfig);
       config = Config.fromJson(jsonConfig);
-      print(jsonConfig);
     }
-    print(config is Config);
     List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
     if (subjects == []){
       return Text("教科を登録してください");
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index){
-        print("${index.toString()}: ${config.smartSet}");
         return view(
           context,
           subjects[index],

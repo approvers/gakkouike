@@ -1,5 +1,3 @@
-// TODO: config型を定義しろ
-import 'package:flutter/cupertino.dart';
 
 class Config{
 
@@ -38,10 +36,7 @@ class Config{
         this.startClass,
         this.endClass,
       }
-  ){
-    this.startClass = DateTime(2019);
-    this.endClass = DateTime(2019);
-  }
+  );
 
   Config.fromJson(Map<String, dynamic> json)
     : smartSet             = json["smartSet"],
