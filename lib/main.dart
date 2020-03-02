@@ -352,13 +352,13 @@ class _HomePageState extends State<HomePage>{
                               context: context,
                               builder: (BuildContext context){
                                 return Container(
-                                  width: 400,
-                                  height: 300,
+                                  width: size.width * 0.8,
+                                  height: size.height * 0.6,
                                     child: AlertDialog(
                                     title: Text("削除する"),
                                     content: Container(
-                                      width: 400,
-                                      height: 300,
+                                      width: size.width * 0.8,
+                                      height: size.height * 0.6,
                                       child: ListView.builder(
                                         itemCount: subject.absenceDates.length,
                                         itemBuilder: (BuildContext context, int i){
