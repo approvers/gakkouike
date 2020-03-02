@@ -64,8 +64,13 @@ class _HomePageState extends State<HomePage>{
                           return GestureDetector(
                             child: Column(
                                 children: [
-                                  Text(subjects[index].name,
-                                  style: TextStyle(fontSize: 20),),
+                                  Row(
+                                    children: <Widget>[
+                                      Text(subjects[index].name,
+                                        style: TextStyle(fontSize: 20),),
+                                    ],
+                                  ),
+
                                   index + 1 == subjects.length ? Container()
                                       : Divider()
                                 ]
