@@ -55,16 +55,32 @@ class _CalendarState extends State<CalendarExample>{
         showDialog(
           context: context,
           builder: (BuildContext context){
+            Size size = MediaQuery.of(context).size;
             return AlertDialog(
               title: Text("${dateTime.year.toString()}/"
                   "${dateTime.month.toString()}/"
                   "${dateTime.day.toString()}の欠課"),
-              content: ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index){
-                  return Text(list[index]);
-                },
-              ),
+              content: Container(
+                width: size.width * 0.8,
+                height: size.height * 0.4,
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return
+                    Column(
+                        children:[
+                          Row(
+                            children: <Widget>[
+                              Text(list[index]),
+                            ],
+                          ),
+                          index + 1 == list.length ? Container():
+                              Divider()
+                        ]
+                    );
+                  },
+                )
+              )
             );
           }
         );
