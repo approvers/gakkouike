@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("学校行け"),
@@ -55,14 +56,19 @@ class _HomePageState extends State<HomePage>{
                   return AlertDialog(
                     title: Text("削除する教科を選択"),
                     content: Container(
-                      width: 400,
-                      height: 300,
+                      width: size.width * 0.8,
+                      height: size.height * 0.2,
                       child: ListView.builder(
                         itemCount: subjects.length,
                         itemBuilder: (BuildContext context, int index){
                           return GestureDetector(
-                            child: ListTile(
-                              title: Text(subjects[index].name),
+                            child: Column(
+                                children: [
+                                  Text(subjects[index].name,
+                                  style: TextStyle(fontSize: 20),),
+                                  index + 1 == subjects.length ? Container()
+                                      : Divider()
+                                ]
                             ),
                             onTap: (){
                               showDialog<bool>(
