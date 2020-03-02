@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gakkouike/data_manager/subject_adder.dart';
-import 'package:gakkouike/subject_pref_util.dart';
+import 'package:gakkouike/data_manager/subject_pref_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 自作モジュール
 import 'calendar/calendar.dart';
 import 'config/config.dart';
 import 'CustomFAB/cool.dart';
-import 'config.dart';
-import 'subject.dart';
+import 'custom_types/config.dart';
+import 'custom_types/subject.dart';
 import 'config/inital_config.dart';
 
 void main() => runApp(MyApp());
