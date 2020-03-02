@@ -265,11 +265,17 @@ class _HomePageState extends State<HomePage>{
 
   Widget view(BuildContext context, Subject subject, Config config, int index) {
     Size size = MediaQuery.of(context).size;
+    Color c;
+    if (subject.absenceDates.length / subject.scheduledClassNum >= config.alertLine){
+      if(subject.absenceDates.length / subject.scheduledClassNum >= config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
+      else c = Colors.orangeAccent;
+    }
+    else c = Colors.white;
     return Center(
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: size.height * 0.15,
+            height: size.height * 0.16,
             width: size.width,
             child: Card(
               child: Row(
@@ -303,7 +309,7 @@ class _HomePageState extends State<HomePage>{
                                 ],
                               ),
                             width: size.width * 0.57,
-                            height: size.height * 0.05,
+                            height: size.height * 0.04,
                           )
 
                         ]
@@ -459,6 +465,7 @@ class _HomePageState extends State<HomePage>{
                   )
                 ],
               ),
+              color: c,
             ),
           ),
         ],
