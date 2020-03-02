@@ -40,7 +40,7 @@ class _CalendarState extends State<CalendarExample>{
     List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
     Map<DateTime, List<String>> map = Map();
     for (Subject subject in subjects){
-      for (DateTime dateTime in subject.absenceDates.dateTimeList){
+      for (DateTime dateTime in subject.absenceDates){
         if (map[dateTime] is List<String>) map[dateTime].add(subject.name);
         else map[dateTime] = <String>[subject.name];
       }

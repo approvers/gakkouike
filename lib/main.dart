@@ -277,9 +277,9 @@ class _HomePageState extends State<HomePage>{
                     Divider(),
                     Row(
                         children: [
-                          Text("欠課率 : ${(subject.absenceDates.dateTimeList.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
+                          Text("欠課率 : ${(subject.absenceDates.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
                           SizedBox(width: 10,),
-                          Text("欠課時数 : ${subject.absenceDates.dateTimeList.length}")
+                          Text("欠課時数 : ${subject.absenceDates.length}")
                         ]
                     )
                   ]),
@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage>{
                         if(config.smartSet){
                           DateTime n = DateTime.now();
                           List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                          subjects[index].absenceDates.dateTimeList.add(DateTime(n.year, n.month, n.day));
+                          subjects[index].absenceDates.add(DateTime(n.year, n.month, n.day));
                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                           subject = subjects[index];
                         }else{
@@ -308,7 +308,7 @@ class _HomePageState extends State<HomePage>{
                           );
                           if (cache != null){
                             List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                            subjects[index].absenceDates.dateTimeList.add(DateTime(cache.year, cache.month, cache.day));
+                            subjects[index].absenceDates.add(DateTime(cache.year, cache.month, cache.day));
                             await SubjectPreferenceUtil.saveSubjectList(subjects);
                             subject = subjects[index];
                           }
@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage>{
                       onPressed: () async{
                         if(config.smartDelete){
                           List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                          subjects[index].absenceDates.dateTimeList.removeLast();
+                          subjects[index].absenceDates.removeLast();
                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                           subject = subjects[index];
                         }else{
@@ -339,17 +339,17 @@ class _HomePageState extends State<HomePage>{
                                 return AlertDialog(
                                   title: Text("削除する"),
                                   content: ListView.builder(
-                                    itemCount: subject.absenceDates.dateTimeList.length,
+                                    itemCount: subject.absenceDates.length,
                                     itemBuilder: (BuildContext context, int i){
                                       return GestureDetector(
                                         child: ListTile(
-                                          title: Text("${subject.absenceDates.dateTimeList[i].year}/"
-                                              "${subject.absenceDates.dateTimeList[i].month}/"
-                                              "${subject.absenceDates.dateTimeList[i].day}"),
+                                          title: Text("${subject.absenceDates[i].year}/"
+                                              "${subject.absenceDates[i].month}/"
+                                              "${subject.absenceDates[i].day}"),
                                         ),
                                         onTap: ()async{
                                           List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                                          subjects[index].absenceDates.dateTimeList.removeAt(i);
+                                          subjects[index].absenceDates.removeAt(i);
                                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                                           subject = subjects[index];
                                           Navigator.pop(context);
