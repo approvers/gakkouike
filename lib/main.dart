@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:gakkouike/cancel_class/cancel_class.dart';
 import 'package:gakkouike/data_manager/subject_adder.dart';
 import 'package:gakkouike/data_manager/subject_pref_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -219,6 +221,28 @@ class _HomePageState extends State<HomePage>{
                       heroTag: "config",
                     ),
                   ],
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 80,
+                      child: Text("休講"),
+                    ),
+                    FloatingActionButton(
+                      child: Icon(Icons.block, size: 20,),
+                      backgroundColor: Colors.deepOrangeAccent,
+                      mini: true,
+                      onPressed: (){
+                        isExpanded ^= true;
+                        Navigator.of(context).push(
+                          new MaterialPageRoute(
+                            builder: (BuildContext context) => new CancelManagerRoot()
+                          )
+                        );
+                      },
+                      heroTag: "cancel",
+                    )
+                  ],
                 )
               ],
             ),
@@ -266,8 +290,8 @@ class _HomePageState extends State<HomePage>{
   Widget view(BuildContext context, Subject subject, Config config, int index) {
     Size size = MediaQuery.of(context).size;
     Color c;
-    if (subject.absenceDates.length / subject.scheduledClassNum >= config.alertLine){
-      if(subject.absenceDates.length / subject.scheduledClassNum >= config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
+    if (subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length) >= config.alertLine){
+      if(subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length)>= config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
       else c = Colors.orangeAccent;
     }
     else c = Colors.white;
@@ -303,7 +327,7 @@ class _HomePageState extends State<HomePage>{
                               ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: <Widget>[
-                                  Text("欠課率 : ${(subject.absenceDates.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
+                                  Text("欠課率 : ${(subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length) * 100).toStringAsFixed(1)}%"),
                                   SizedBox(width: 10,),
                                   Text("欠課時数 : ${subject.absenceDates.length}")
                                 ],
@@ -470,7 +494,6 @@ class _HomePageState extends State<HomePage>{
           ),
         ],
       ),
-    )
-    ;
+    );
   }
 }
