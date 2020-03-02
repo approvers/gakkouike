@@ -9,17 +9,22 @@ class Subject {
   /// 予定されている授業の数
   int scheduledClassNum;
 
-  Subject({this.name, this.absenceDates, this.scheduledClassNum}){
+  List<DateTime> cancelClasses;
+
+  Subject({this.name, this.absenceDates, this.scheduledClassNum, this.cancelClasses}){
     this.absenceDates ??= [];
+    this.cancelClasses ??= [];
   }
   Subject.fromJson(Map<String, dynamic> json)
     : name              = json["name"],
       absenceDates      = json["absenceDates"].map((t) => DateTime.parse(t)).toList().cast<DateTime>(),
-      scheduledClassNum = json["scheduledClassNum"];
+      scheduledClassNum = json["scheduledClassNum"],
+      cancelClasses     = json["cancelClasses"].map((t) => DateTime.parse(t)).toList().cast<DateTime>();
 
   Map<String, dynamic> toJson() => {
     "name"              : name,
     "absenceDates"      : absenceDates.map((d) => d.toIso8601String()).toList(),
-    "scheduledClassNum" : scheduledClassNum
+    "scheduledClassNum" : scheduledClassNum,
+    "cancelClasses"     : cancelClasses.map((d) => d.toIso8601String()).toList()
   };
 }
