@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gakkouike/data_manager/subject_adder.dart';
-import 'package:gakkouike/subject_pref_util.dart';
+import 'package:gakkouike/data_manager/subject_pref_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 自作モジュール
 import 'calendar/calendar.dart';
 import 'config/config.dart';
 import 'CustomFAB/cool.dart';
-import 'config.dart';
-import 'subject.dart';
+import 'custom_types/config.dart';
+import 'custom_types/subject.dart';
 import 'config/inital_config.dart';
 
 void main() => runApp(MyApp());
@@ -342,8 +342,29 @@ class _HomePageState extends State<HomePage>{
                     child: IconButton(
                       icon: Icon(Icons.remove, size: 25,),
                       onPressed: () async{
-                        if(config.smartDelete){
-                          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                        List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                        if(subjects[index].absenceDates.length == 0){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    "あなたは神なのでまだ欠課していません。"
+                                    "堕落しないようにこれからも出席を続けましょう。"
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("yeah"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      setState(() {});
+                                    },
+                                  )
+                                ]
+                              );
+                            }
+                          );
+                        }else if(config.smartDelete){
                           subjects[index].absenceDates.removeLast();
                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                           subject = subjects[index];

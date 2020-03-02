@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gakkouike/config.dart';
+import 'package:gakkouike/custom_types/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialConfigPage extends StatefulWidget{
