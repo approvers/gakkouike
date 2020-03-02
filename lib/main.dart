@@ -35,6 +35,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>{
   bool isExpanded = false;
+  Config config;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,29 +194,19 @@ class _HomePageState extends State<HomePage>{
                             )
                         ).then((_){
                           setState(() {
-
                           });
                         });
                         setState(() {
-
-
                         });
                       },
                       heroTag: "config",
                     ),
                   ],
                 )
-
-
-
               ],
             ),
     );
-
-
   }
-
-  Config config;
 
   Future loadData()async{
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -364,7 +356,6 @@ class _HomePageState extends State<HomePage>{
                               }
                           );
                         }
-
                         setState(() {
 
                         });
@@ -378,7 +369,6 @@ class _HomePageState extends State<HomePage>{
             ),
           ),
         ],
-
       ),
     )
     ;
