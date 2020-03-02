@@ -323,17 +323,46 @@ class _HomePageState extends State<HomePage>{
                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                           subject = subjects[index];
                         }else{
+                          print(config.startClass.isAfter(DateTime.now()));
+                          print(config.startClass);
                           final DateTime cache = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              firstDate: config.startClass,
-                              lastDate: config.endClass
+                              firstDate: config.startClass.isAfter(DateTime.now()) ?
+                                          DateTime.now().subtract(new Duration(days: 1)): config.startClass ,
+                              lastDate: config.endClass.isBefore(DateTime.now()) ?
+                                          DateTime.now().add(new Duration(days: 1)) : config.endClass
                           );
                           if (cache != null){
-                            List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                            subjects[index].absenceDates.add(DateTime(cache.year, cache.month, cache.day));
-                            await SubjectPreferenceUtil.saveSubjectList(subjects);
-                            subject = subjects[index];
+                            if (cache.isAfter(config.startClass) && cache.isBefore(config.endClass)) {
+                              List<Subject> subjects = await SubjectPreferenceUtil
+                                  .getSubjectListFromPref();
+                              subjects[index].absenceDates.add(
+                                  DateTime(cache.year, cache.month, cache.day));
+                              await SubjectPreferenceUtil.
+                                saveSubjectList(subjects);
+                              subject = subjects[index];
+                            }
+                            else showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return AlertDialog(
+                                  title: Text("エラー"),
+                                  content: Text(
+                                    "欠課するのは始業日と終業日の間でなくてはいけません",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("yeah"),
+                                      onPressed: (){
+                                        Navigator.pop(context);
+                                      },
+                                    )
+                                  ],
+                                );
+                              }
+                            );
                           }
                         }
                         setState(() {

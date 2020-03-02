@@ -324,14 +324,35 @@ class _ConfigPageState extends State<ConfigRootView>{
                       lastDate: DateTime(2100)
                   );
                   if (cache != null){
-                    setState(() {
-                      config.startClass = DateTime(
-                        cache.year,
-                        cache.month,
-                        cache.day
-                      );
-                    });
-                    changeAnySetting = true;
+                    if (config.endClass.isAfter(cache)) {
+                      setState(() {
+                        config.startClass = DateTime(
+                            cache.year,
+                            cache.month,
+                            cache.day
+                        );
+                      });
+                      changeAnySetting = true;
+                    }else showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text("エラー"),
+                            content: Text(
+                              "始業の前に終業する特殊な学校には対応していません",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("yeah"),
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        }
+                    );
                   }
                 },
               ),
@@ -347,14 +368,35 @@ class _ConfigPageState extends State<ConfigRootView>{
                       lastDate: DateTime(2100)
                   );
                   if (cache != null){
-                    setState(() {
-                      config.endClass = DateTime(
-                        cache.year,
-                        cache.month,
-                        cache.day
-                      );
-                    });
-                    changeAnySetting = true;
+                    if (config.startClass.isBefore(cache)) {
+                      setState(() {
+                        config.endClass = DateTime(
+                            cache.year,
+                            cache.month,
+                            cache.day
+                        );
+                      });
+                      changeAnySetting = true;
+                    }else showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text("エラー"),
+                            content: Text(
+                              "始業の前に終業する特殊な学校には対応していません",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("yeah"),
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        }
+                    );
                   }
                 },
               )
