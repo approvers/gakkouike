@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("学校行け"),
@@ -54,42 +55,56 @@ class _HomePageState extends State<HomePage>{
                 builder: (BuildContext context){
                   return AlertDialog(
                     title: Text("削除する教科を選択"),
-                    content: ListView.builder(
-                      itemCount: subjects.length,
-                      itemBuilder: (BuildContext context, int index){
-                        return GestureDetector(
-                          child: ListTile(
-                            title: Text(subjects[index].name),
-                          ),
-                          onTap: (){
-                            showDialog<bool>(
-                              context: context,
-                              builder: (_){
-                                return AlertDialog(
-                                  title: Text("本当に削除してもいいですか?"),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text("No"),
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                    ),
-                                    FlatButton(
-                                      child: Text("Yes"),
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                    )
-                                  ],
-                                );
-                              }
-                            ).then((v){
-                              if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
-                              Navigator.pop(context);
-                              setState(() {
+                    content: Container(
+                      width: size.width * 0.8,
+                      height: size.height * 0.2,
+                      child: ListView.builder(
+                        itemCount: subjects.length,
+                        itemBuilder: (BuildContext context, int index){
+                          return GestureDetector(
+                            child: Column(
+                                children: [
+                                  Row(
+                                    children: <Widget>[
+                                      Text(subjects[index].name,
+                                        style: TextStyle(fontSize: 20),),
+                                    ],
+                                  ),
 
+                                  index + 1 == subjects.length ? Container()
+                                      : Divider()
+                                ]
+                            ),
+                            onTap: (){
+                              showDialog<bool>(
+                                context: context,
+                                builder: (_){
+                                  return AlertDialog(
+                                    title: Text("本当に削除してもいいですか?"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("No"),
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                      ),
+                                      FlatButton(
+                                        child: Text("Yes"),
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                      )
+                                    ],
+                                  );
+                                }
+                              ).then((v){
+                                if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
                               });
-                            });
-                          },
-                        );
-                      }
-                    ),
+                            },
+                          );
+                        }
+                      ),
+                    )
                   );
                 }
               );
@@ -336,30 +351,38 @@ class _HomePageState extends State<HomePage>{
                           showDialog(
                               context: context,
                               builder: (BuildContext context){
-                                return AlertDialog(
-                                  title: Text("削除する"),
-                                  content: ListView.builder(
-                                    itemCount: subject.absenceDates.length,
-                                    itemBuilder: (BuildContext context, int i){
-                                      return GestureDetector(
-                                        child: ListTile(
-                                          title: Text("${subject.absenceDates[i].year}/"
-                                              "${subject.absenceDates[i].month}/"
-                                              "${subject.absenceDates[i].day}"),
-                                        ),
-                                        onTap: ()async{
-                                          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                                          subjects[index].absenceDates.removeAt(i);
-                                          await SubjectPreferenceUtil.saveSubjectList(subjects);
-                                          subject = subjects[index];
-                                          Navigator.pop(context);
-                                          setState(() {
+                                return Container(
+                                  width: size.width * 0.8,
+                                  height: size.height * 0.6,
+                                    child: AlertDialog(
+                                    title: Text("削除する"),
+                                    content: Container(
+                                      width: size.width * 0.8,
+                                      height: size.height * 0.6,
+                                      child: ListView.builder(
+                                        itemCount: subject.absenceDates.length,
+                                        itemBuilder: (BuildContext context, int i){
+                                          return GestureDetector(
+                                            child: ListTile(
+                                              title: Text("${subject.absenceDates[i].year}/"
+                                                  "${subject.absenceDates[i].month}/"
+                                                  "${subject.absenceDates[i].day}"),
+                                            ),
+                                            onTap: ()async{
+                                              List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                                              subjects[index].absenceDates.removeAt(i);
+                                              await SubjectPreferenceUtil.saveSubjectList(subjects);
+                                              subject = subjects[index];
+                                              Navigator.pop(context);
+                                              setState(() {
 
-                                          });
+                                              });
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    )
+                                  )
                                 );
                               }
                           );
