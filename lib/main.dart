@@ -327,8 +327,29 @@ class _HomePageState extends State<HomePage>{
                     child: IconButton(
                       icon: Icon(Icons.remove, size: 25,),
                       onPressed: () async{
-                        if(config.smartDelete){
-                          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                        List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                        if(subjects[index].absenceDates.length == 0){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    "あなたは神なのでまだ欠課していません。"
+                                    "堕落しないようにこれからも出席を続けましょう。"
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("yeah"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      setState(() {});
+                                    },
+                                  )
+                                ]
+                              );
+                            }
+                          );
+                        }else if(config.smartDelete){
                           subjects[index].absenceDates.removeLast();
                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                           subject = subjects[index];
@@ -348,7 +369,6 @@ class _HomePageState extends State<HomePage>{
                                               "${subject.absenceDates[i].day}"),
                                         ),
                                         onTap: ()async{
-                                          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
                                           subjects[index].absenceDates.removeAt(i);
                                           await SubjectPreferenceUtil.saveSubjectList(subjects);
                                           subject = subjects[index];
