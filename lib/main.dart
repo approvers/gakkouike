@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage>{
               child: Row(
                 children: <Widget>[
                   SizedBox(
-                    width: size.width*0.05,
+                    width: size.width*0.02,
                   ),
                   SizedBox(child:
                   Column(children:[
@@ -292,16 +292,24 @@ class _HomePageState extends State<HomePage>{
                     Divider(),
                     Row(
                         children: [
-                          Text("欠課率 : ${(subject.absenceDates.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
-                          SizedBox(width: 10,),
-                          Text("欠課時数 : ${subject.absenceDates.length}")
+                          Container(
+                            child:
+                              ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  Text("欠課率 : ${(subject.absenceDates.length / subject.scheduledClassNum * 100).toStringAsFixed(1)}%"),
+                                  SizedBox(width: 10,),
+                                  Text("欠課時数 : ${subject.absenceDates.length}")
+                                ],
+                              ),
+                            width: size.width * 0.57,
+                            height: size.height * 0.05,
+                          )
+
                         ]
                     )
                   ]),
-                    width: size.width * 0.45,
-                  ),
-                  SizedBox(
-                    width: size.width * 0.15,
+                    width: size.width * 0.57,
                   ),
                   Container(child:
                   Card(
@@ -335,6 +343,8 @@ class _HomePageState extends State<HomePage>{
                     ),
                     color: Colors.greenAccent,
                   ),
+                    width: size.width * 0.17,
+                    height: size.width * 0.17,
                   )
                   ,
                   Container(child:
@@ -415,6 +425,8 @@ class _HomePageState extends State<HomePage>{
                     ),
                     color: Colors.redAccent,
                   ),
+                    width: size.width * 0.17,
+                    height: size.width * 0.17,
                   )
                 ],
               ),
