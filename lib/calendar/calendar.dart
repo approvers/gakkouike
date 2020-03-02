@@ -59,12 +59,16 @@ class _CalendarState extends State<CalendarExample>{
               title: Text("${dateTime.year.toString()}/"
                   "${dateTime.month.toString()}/"
                   "${dateTime.day.toString()}の欠課"),
-              content: ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index){
-                  return Text(list[index]);
-                },
-              ),
+              content: Container(
+                width: 400,
+                height: 300,
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return Text(list[index]);
+                  },
+                )
+              )
             );
           }
         );

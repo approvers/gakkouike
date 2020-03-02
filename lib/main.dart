@@ -54,42 +54,46 @@ class _HomePageState extends State<HomePage>{
                 builder: (BuildContext context){
                   return AlertDialog(
                     title: Text("削除する教科を選択"),
-                    content: ListView.builder(
-                      itemCount: subjects.length,
-                      itemBuilder: (BuildContext context, int index){
-                        return GestureDetector(
-                          child: ListTile(
-                            title: Text(subjects[index].name),
-                          ),
-                          onTap: (){
-                            showDialog<bool>(
-                              context: context,
-                              builder: (_){
-                                return AlertDialog(
-                                  title: Text("本当に削除してもいいですか?"),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text("No"),
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                    ),
-                                    FlatButton(
-                                      child: Text("Yes"),
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                    )
-                                  ],
-                                );
-                              }
-                            ).then((v){
-                              if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
-                              Navigator.pop(context);
-                              setState(() {
+                    content: Container(
+                      width: 400,
+                      height: 300,
+                      child: ListView.builder(
+                        itemCount: subjects.length,
+                        itemBuilder: (BuildContext context, int index){
+                          return GestureDetector(
+                            child: ListTile(
+                              title: Text(subjects[index].name),
+                            ),
+                            onTap: (){
+                              showDialog<bool>(
+                                context: context,
+                                builder: (_){
+                                  return AlertDialog(
+                                    title: Text("本当に削除してもいいですか?"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("No"),
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                      ),
+                                      FlatButton(
+                                        child: Text("Yes"),
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                      )
+                                    ],
+                                  );
+                                }
+                              ).then((v){
+                                if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
+                                Navigator.pop(context);
+                                setState(() {
 
+                                });
                               });
-                            });
-                          },
-                        );
-                      }
-                    ),
+                            },
+                          );
+                        }
+                      ),
+                    )
                   );
                 }
               );
@@ -336,30 +340,38 @@ class _HomePageState extends State<HomePage>{
                           showDialog(
                               context: context,
                               builder: (BuildContext context){
-                                return AlertDialog(
-                                  title: Text("削除する"),
-                                  content: ListView.builder(
-                                    itemCount: subject.absenceDates.length,
-                                    itemBuilder: (BuildContext context, int i){
-                                      return GestureDetector(
-                                        child: ListTile(
-                                          title: Text("${subject.absenceDates[i].year}/"
-                                              "${subject.absenceDates[i].month}/"
-                                              "${subject.absenceDates[i].day}"),
-                                        ),
-                                        onTap: ()async{
-                                          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                                          subjects[index].absenceDates.removeAt(i);
-                                          await SubjectPreferenceUtil.saveSubjectList(subjects);
-                                          subject = subjects[index];
-                                          Navigator.pop(context);
-                                          setState(() {
+                                return Container(
+                                  width: 400,
+                                  height: 300,
+                                    child: AlertDialog(
+                                    title: Text("削除する"),
+                                    content: Container(
+                                      width: 400,
+                                      height: 300,
+                                      child: ListView.builder(
+                                        itemCount: subject.absenceDates.length,
+                                        itemBuilder: (BuildContext context, int i){
+                                          return GestureDetector(
+                                            child: ListTile(
+                                              title: Text("${subject.absenceDates[i].year}/"
+                                                  "${subject.absenceDates[i].month}/"
+                                                  "${subject.absenceDates[i].day}"),
+                                            ),
+                                            onTap: ()async{
+                                              List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+                                              subjects[index].absenceDates.removeAt(i);
+                                              await SubjectPreferenceUtil.saveSubjectList(subjects);
+                                              subject = subjects[index];
+                                              Navigator.pop(context);
+                                              setState(() {
 
-                                          });
+                                              });
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    )
+                                  )
                                 );
                               }
                           );
