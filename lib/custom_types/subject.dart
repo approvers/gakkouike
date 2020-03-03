@@ -1,4 +1,9 @@
 
+import 'dart:convert';
+
+import 'package:gakkouike/custom_types/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// 教科ごとの欠課を管理するクラス。
 class Subject {
 
@@ -27,4 +32,16 @@ class Subject {
     "scheduledClassNum" : scheduledClassNum,
     "cancelClasses"     : cancelClasses.map((d) => d.toIso8601String()).toList()
   };
+
+  static calcClassesFromWeek(int classesPerWeek) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    Config config = Config.fromJson(jsonDecode(pref.getString("config")));
+
+    int fullWeek = config.endClass.difference(config.startClass).inDays ~/ 7;
+    int vcSubbed = fullWeek - config.summerVacationLength - config.winterVacationLength;
+
+    return vcSubbed * classesPerWeek;
+
+  }
+
 }
