@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:gakkouike/custom_types/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +17,9 @@ class Subject {
 
   List<DateTime> cancelClasses;
 
-  Subject({this.name, this.absenceDates, this.scheduledClassNum, this.cancelClasses}){
+  Color color;
+
+  Subject({this.name, this.absenceDates, this.scheduledClassNum, this.cancelClasses,this.color}){
     this.absenceDates ??= [];
     this.cancelClasses ??= [];
   }
@@ -24,13 +27,15 @@ class Subject {
     : name              = json["name"],
       absenceDates      = json["absenceDates"].map((t) => DateTime.parse(t)).toList().cast<DateTime>(),
       scheduledClassNum = json["scheduledClassNum"],
-      cancelClasses     = json["cancelClasses"].map((t) => DateTime.parse(t)).toList().cast<DateTime>();
+      cancelClasses     = json["cancelClasses"].map((t) => DateTime.parse(t)).toList().cast<DateTime>(),
+      color             = Color(json["color"]);
 
   Map<String, dynamic> toJson() => {
     "name"              : name,
     "absenceDates"      : absenceDates.map((d) => d.toIso8601String()).toList(),
     "scheduledClassNum" : scheduledClassNum,
-    "cancelClasses"     : cancelClasses.map((d) => d.toIso8601String()).toList()
+    "cancelClasses"     : cancelClasses.map((d) => d.toIso8601String()).toList(),
+    "color"             : color.value
   };
 
   static calcClassesFromWeek(int classesPerWeek) async {
