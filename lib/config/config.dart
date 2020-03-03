@@ -20,35 +20,78 @@ class _ConfigPageState extends State<ConfigRootView>{
   //TODO: 実装しろカス
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("設定"),),
-      body:Container(
-        child: FutureBuilder(
-          future: loadConfig(),
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if (snapshot.hasData){
-              return snapshot.data;
-            }else if(snapshot.hasError){
-              return Text(snapshot.error.toString());
-            }else{
-              return Container(
-                child: CircularProgressIndicator(),
-              );
-            }
-            },
-        )
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: ()async{
-          if (changeAnySetting){
-            SharedPreferences pref = await SharedPreferences.getInstance();
-            var rawJson = config.toJson();
-            String json = jsonEncode(rawJson);
-            pref.setString("config", json);
+    return WillPopScope(
+      onWillPop: () async {
+        if(changeAnySetting) {
+          int exitCode = await showDialog<int>(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text("ああ待って待って"),
+                  content: Text(
+                      "設定変えられてるんですけど保存されてないんです\n"
+                          "どうしますか?"
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("変えるのやめるわ"),
+                      onPressed: () => Navigator.of(context).pop(0),
+                    ),
+                    FlatButton(
+                      child: Text("一旦設定に戻りたい"),
+                      onPressed: () => Navigator.of(context).pop(1),
+                    ),
+                    FlatButton(
+                      child: Text("保存してくれ"),
+                      onPressed: () => Navigator.of(context).pop(2),
+                    )
+                  ],
+                );
+              }
+          );
+          switch (exitCode) {
+            case 0:
+              Navigator.of(context).pop();
+              return Future.value(false);
+            case 1:
+              return Future.value(false);
+            case 2:
+              await saveConfig();
+              Navigator.of(context).pop();
+              return Future.value(false);
+            default:
+              return Future.value(false);
           }
-          Navigator.pop(context);
-        },
+        } else {
+          Navigator.of(context).pop();
+          return Future.value(false);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text("設定"),),
+        body:Container(
+          child: FutureBuilder(
+            future: loadConfig(),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+              if (snapshot.hasData){
+                return snapshot.data;
+              }else if(snapshot.hasError){
+                return Text(snapshot.error.toString());
+              }else{
+                return Container(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              },
+          )
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.save),
+          onPressed: () async {
+            saveConfig();
+            Navigator.pop(context);
+          }
+        ),
       ),
     );
   }
@@ -60,6 +103,15 @@ class _ConfigPageState extends State<ConfigRootView>{
     alertLineController.dispose();
     redLineController.dispose();
     super.dispose();
+  }
+
+  Future saveConfig() async{
+    if (changeAnySetting){
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      var rawJson = config.toJson();
+      String json = jsonEncode(rawJson);
+      pref.setString("config", json);
+    }
   }
 
   Future loadConfig() async{
