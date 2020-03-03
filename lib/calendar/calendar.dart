@@ -115,10 +115,12 @@ class _CalendarState extends State<CalendarExample>{
         break;
       }
     }
+    bool likeWhite = false;
+    if (color.red > 150 && color.green > 150 && color.blue > 150) likeWhite = true;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
+        shape: BoxShape.circle,
         color: color,
       ),
       width: 16.0,
@@ -127,7 +129,7 @@ class _CalendarState extends State<CalendarExample>{
         child: Text(
           '${events.length}',
           style: TextStyle().copyWith(
-            color: color == Colors.white ? Colors.black : Colors.white,
+            color: likeWhite ? Colors.black : Colors.white,
             fontSize: 12.0,
           ),
         ),
