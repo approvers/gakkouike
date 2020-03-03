@@ -300,6 +300,28 @@ class _ConfigPageState extends State<ConfigRootView>{
                               }catch(exception){
                                 return;
                               }
+                              if (config.alertLine >= config.redLine) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      return AlertDialog(
+                                        title: Text("エラー"),
+                                        content: Text(
+                                          "警告ラインは留年ラインより低く設定しろカス",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("yeah"),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                );
+                              }
                             },
                           ),
                           FlatButton(
@@ -349,6 +371,28 @@ class _ConfigPageState extends State<ConfigRootView>{
                                 Navigator.of(context).pop();
                               }catch(exception){
                                 return;
+                              }
+                              if (config.alertLine >= config.redLine) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      return AlertDialog(
+                                        title: Text("エラー"),
+                                        content: Text(
+                                          "警告ラインは留年ラインより低く設定しろカス",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("yeah"),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                );
                               }
                             },
                           ),
