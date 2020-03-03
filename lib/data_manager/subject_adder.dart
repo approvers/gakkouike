@@ -34,6 +34,13 @@ class _SubjectAdderState extends State<SubjectAdder>{
       calcedTextController.text = subject.scheduledClassNum.toString();
     }
   }
+  @override
+  void initState() {
+    super.initState();
+    redTextController.text = "255";
+    greenTextController.text = "255";
+    blueTextController.text = "255";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +118,7 @@ class _SubjectAdderState extends State<SubjectAdder>{
                 Container(
                     margin: EdgeInsets.all(10)
                 ),
+                Text("色設定"),
                 Row(
                   children: <Widget>[
                     Container(
@@ -118,7 +126,7 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelStyle: TextStyle(fontSize: 18),
-                          labelText: "教科の色コード(赤)",
+                          labelText: "赤",
                           hintText: "0~255までで入力してください"
                         ),
                         keyboardType: TextInputType.number,
@@ -131,7 +139,7 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelStyle: TextStyle(fontSize: 18),
-                            labelText: "教科の色コード(緑)",
+                            labelText: "緑",
                             hintText: "0~255までで入力してください"
                         ),
                         keyboardType: TextInputType.number,
@@ -144,7 +152,7 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelStyle: TextStyle(fontSize: 18),
-                            labelText: "教科の色コード(青)",
+                            labelText: "青",
                             hintText: "0~255までで入力してください"
                         ),
                         keyboardType: TextInputType.number,
