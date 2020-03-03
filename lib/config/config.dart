@@ -42,6 +42,33 @@ class _ConfigPageState extends State<ConfigRootView>{
         child: Icon(Icons.save),
         onPressed: ()async{
           if (changeAnySetting){
+
+            int classDuration = config.endClass.difference(config.startClass).inDays ~/ 7;
+
+            if((config.summerVacationLength + config.winterVacationLength) > classDuration) {
+              showDialog(
+                context: context,
+                child:  AlertDialog(
+                  title: Text("エラー"),
+                  content: Text(
+                    "学校があるのは$classDuration週なんですけど、"
+                    "夏休みと冬休みの期間が合わせて${config.summerVacationLength + config.winterVacationLength}週なんですよ\n"
+                    "休みの期間が学校ある期間を超えてしまってるので減らしてくださいすまんな",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("かなしいね"),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              );
+              return;
+            }
+
             SharedPreferences pref = await SharedPreferences.getInstance();
             var rawJson = config.toJson();
             String json = jsonEncode(rawJson);
