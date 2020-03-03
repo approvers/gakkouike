@@ -294,12 +294,36 @@ class _ConfigPageState extends State<ConfigRootView>{
                               }
                               try{
                                 double num = double.parse(_input);
-                                config.alertLine = num;
-                                changeAnySetting = true;
-                                Navigator.of(context).pop();
+                                if (num >= config.redLine) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context){
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "警告ラインは留年ラインより低く設定しろカス",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("yeah"),
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }
+                                  );
+                                }else {
+                                  config.alertLine = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                }
                               }catch(exception){
                                 return;
                               }
+
                             },
                           ),
                           FlatButton(
@@ -344,12 +368,37 @@ class _ConfigPageState extends State<ConfigRootView>{
                               }
                               try{
                                 double num = double.parse(_input);
-                                config.redLine = num;
-                                changeAnySetting = true;
-                                Navigator.of(context).pop();
+                                if (config.alertLine >= num) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context){
+                                        print("カス");
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "警告ラインは留年ラインより低く設定しろカス",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("yeah"),
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }
+                                  );
+                                }else {
+                                  config.redLine = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                }
                               }catch(exception){
                                 return;
                               }
+
                             },
                           ),
                           FlatButton(
