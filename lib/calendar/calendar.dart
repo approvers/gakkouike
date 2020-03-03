@@ -119,9 +119,7 @@ class _CalendarState extends State<CalendarExample>{
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: _calendarController.isSelected(date)
-            ? Colors.redAccent[500]
-            : color,
+        color: color,
       ),
       width: 16.0,
       height: 16.0,
