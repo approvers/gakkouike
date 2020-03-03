@@ -11,8 +11,8 @@ class InitialConfigPage extends StatefulWidget{
 }
 
 class _InitialConfigPageState extends State<InitialConfigPage>{
-  DateTime startClass = DateTime(2019, 8, 10);
-  DateTime endClass = DateTime(2100, 8, 10);
+  DateTime startClass = DateTime(2019, 4, 1);
+  DateTime endClass = DateTime(2020, 3, 31);
 
   @override
   Widget build(BuildContext context) {
@@ -20,62 +20,91 @@ class _InitialConfigPageState extends State<InitialConfigPage>{
       appBar: AppBar(title: Text("初期設定")),
       body: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text("始業日: ${startClass.year.toString()}/"
-                  "${startClass.month.toString()}/"
-                  "${startClass.day.toString()}",
-                style: TextStyle(fontSize: 30),
-              ),
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () async{
-                  final cache = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2200)
-                  );
-                  if (cache != null){
-                    startClass = DateTime(
-                      cache.year,
-                      cache.month,
-                      cache.day
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: Colors.grey)
+            ),
+            child: Row(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () async{
+                    final cache = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100)
                     );
-                  }
-                  setState(() {});
-                },
-              )
-            ],
+                    if (cache != null){
+                      startClass = DateTime(
+                          cache.year,
+                          cache.month,
+                          cache.day
+                      );
+                    }
+                    setState(() {});
+                  },
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("始業日"),
+                    Text("${startClass.year.toString()}/"
+                        "${startClass.month.toString()}/"
+                        "${startClass.day.toString()}",
+                        style: TextStyle(fontSize: 20)
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
-          Row(
-            children: <Widget>[
-              Text("終業日: ${endClass.year.toString()}/"
-                  "${endClass.month.toString()}/"
-                  "${endClass.day.toString()}",
-                style: TextStyle(fontSize: 30),
-              ),
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () async{
-                  final cache = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2200)
-                  );
-                  if (cache != null){
-                    endClass = DateTime(
-                        cache.year,
-                        cache.month,
-                        cache.day
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 5, right: 10, bottom:10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                border: Border.all(color: Colors.grey)
+            ),
+            child: Row(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () async{
+                    final cache = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100)
                     );
-                  }
-                  setState(() {});
-                },
-              )
-            ],
+                    if (cache != null){
+                      endClass = DateTime(
+                          cache.year,
+                          cache.month,
+                          cache.day
+                      );
+                    }
+                    setState(() {});
+                  },
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("終業日"),
+                    Text("${endClass.year.toString()}/"
+                        "${endClass.month.toString()}/"
+                        "${endClass.day.toString()}",
+                        style: TextStyle(fontSize: 20)
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
+
           RaisedButton(
             child: Text("†設定完了†"),
             onPressed: () async{
