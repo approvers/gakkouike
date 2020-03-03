@@ -21,6 +21,9 @@ class _SubjectAdderState extends State<SubjectAdder>{
   final nameTextController = new TextEditingController();
   final numberTextController = new TextEditingController();
   final calcedTextController = new TextEditingController();
+  final redTextController = new TextEditingController();
+  final greenTextController = new TextEditingController();
+  final blueTextController = new TextEditingController();
 
   Color calcErrOccurred = Colors.black;
 
@@ -31,14 +34,21 @@ class _SubjectAdderState extends State<SubjectAdder>{
       calcedTextController.text = subject.scheduledClassNum.toString();
     }
   }
+  @override
+  void initState() {
+    super.initState();
+    redTextController.text = "255";
+    greenTextController.text = "255";
+    blueTextController.text = "255";
+  }
 
   @override
   Widget build(BuildContext context) {
-
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(title: Text("教科を追加する"),),
       body: Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(size.width * 0.05),
         child: ListView(
           children: <Widget>[
             Column(
@@ -106,6 +116,53 @@ class _SubjectAdderState extends State<SubjectAdder>{
                   keyboardType: TextInputType.number,
                 ),
                 Container(
+                    margin: EdgeInsets.all(10)
+                ),
+                Text("色設定"),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(fontSize: 18),
+                          labelText: "赤",
+                          hintText: "0~255までで入力してください"
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: redTextController,
+                      ),
+                      width: size.width * 0.3,
+                    ),
+                    Container(
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(fontSize: 18),
+                            labelText: "緑",
+                            hintText: "0~255までで入力してください"
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: greenTextController,
+                      ),
+                      width: size.width * 0.3,
+                    ),
+                    Container(
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(fontSize: 18),
+                            labelText: "青",
+                            hintText: "0~255までで入力してください"
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: blueTextController,
+                      ),
+                      width: size.width * 0.3,
+                    ),
+                  ],
+                ),
+                Container(
                   margin: EdgeInsets.all(20)
                 ),
                 RaisedButton(
@@ -113,7 +170,11 @@ class _SubjectAdderState extends State<SubjectAdder>{
                   shape: UnderlineInputBorder(),
                   // ignore: missing_return
                   onPressed: () async {
-                    if(nameTextController.text == "" || calcedTextController.text == ""){
+                    print(blueTextController.text);
+                    if(nameTextController.text.trim() == "" || calcedTextController.text.trim() == "" ||
+                        redTextController.text.trim() == "" || greenTextController.text.trim() == "" ||
+                        blueTextController.text.trim() == ""
+                    ){
                       return showDialog(
                         context: context,
                         builder: (_) {
@@ -130,12 +191,14 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         }
                       );
                     }
-                    if(int.tryParse(calcedTextController.text) == null) {
+                    print(int.tryParse(blueTextController.text));
+                    if(int.tryParse(calcedTextController.text) == null || int.tryParse(redTextController.text) == null ||
+                        int.tryParse(greenTextController.text) == null || int.tryParse(blueTextController.text) == null) {
                       return showDialog(
                         context: context,
                         builder: (_) {
                           return AlertDialog(
-                            title: Text("私にはその授業数が読めません！"),
+                            title: Text("私にはその授業数または色コードが読めません！"),
                             content: Text("一般的に数字として定義されている文字を使用してください"),
                             actions: <Widget>[
                               FlatButton(
@@ -147,11 +210,66 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         }
                       );
                     }
+                    if (255 < int.parse(redTextController.text) ||
+                        255 < int.parse(greenTextController.text) ||
+                        255 < int.parse(blueTextController.text) ||
+                        0   > int.parse(redTextController.text) ||
+                        0   > int.parse(greenTextController.text) ||
+                        0   > int.parse(blueTextController.text)
+                    ){
+                      return showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text("エラー"),
+                            content: Text(
+                                "おう!!!色コードを0~255にしろって言ったよな?"
+                                "なんでそんな値入力してんだカス!†悔い改めて†"
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("おう!!!"),
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("は、知るか"),
+                                onPressed: (){
+                                  redTextController.text   = "034043t4380435024";
+                                  greenTextController.text = "342342480r2r02939r";
+                                  blueTextController.text  = "3925248063503606540";
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }
+                    int red = int.parse(redTextController.text);
+                    int green = int.parse(greenTextController.text);
+                    int blue = int.parse(blueTextController.text);
+                    String rHash = red.toRadixString(16);
+                    String gHash = green.toRadixString(16);
+                    String bHash = blue.toRadixString(16);
+                    if (red < 10){
+                      rHash = "0$rHash";
+                    }
+                    if (green < 10){
+                      gHash = "0$gHash";
+                    }
+                    if (blue < 10){
+                      bHash = "0$bHash";
+                    }
+
+                    String colorCode = "0xff$rHash$gHash$bHash";
 
                     Subject generated = new Subject(
                         name: nameTextController.text,
                         absenceDates: (widget.index >= 0 ? widget.subject.absenceDates : []),
-                        scheduledClassNum: int.parse(calcedTextController.text)
+                        scheduledClassNum: int.parse(calcedTextController.text),
+                        color: Color(int.parse(colorCode))
                     );
 
                     if(widget.index >= 0){

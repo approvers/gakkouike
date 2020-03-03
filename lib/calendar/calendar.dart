@@ -10,34 +10,36 @@ class CalendarExample extends StatefulWidget{
 
 class _CalendarState extends State<CalendarExample>{
   CalendarController _calendarController;
-
+  List<Subject> subjects;
   @override
   Widget build(BuildContext context) {// TODO: implement build
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: FutureBuilder(
-          future: setAbsence(),
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if(snapshot.hasData){
-              return snapshot.data;
-            }else if(snapshot.hasError){
-              return Center(
-                child: Text("${snapshot.error.toString()}"),
-              );
-            }else{
-              return Container(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        )
+      body: Column(
+        children: [
+          FutureBuilder(
+            future: setAbsence(),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+              if(snapshot.hasData){
+                return snapshot.data;
+              }else if(snapshot.hasError){
+                return Center(
+                  child: Text("${snapshot.error.toString()}"),
+                );
+              }else{
+                return Container(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          )
+        ]
       ),
     );
   }
 
   Future setAbsence() async{
-    List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+    subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
     Map<DateTime, List<String>> map = Map();
     for (Subject subject in subjects){
       for (DateTime dateTime in subject.absenceDates){
@@ -85,6 +87,53 @@ class _CalendarState extends State<CalendarExample>{
           }
         );
       },
+      builders: CalendarBuilders(
+        markersBuilder: (BuildContext context, DateTime date, events, holidays){
+          final children = <Widget>[];
+          if (events.isNotEmpty){
+            children.add(
+              Positioned(
+                right: 1,
+                bottom: 1,
+                child: _buildEventMarker(date, events),
+              )
+            );
+          }
+          return children;
+        }
+      ),
+    );
+  }
+
+  Widget _buildEventMarker(DateTime date, events){
+    print(events);
+    String key = events[0];
+    Color color;
+    for (Subject subject in subjects){
+      if (subject.name == key){
+        color = subject.color;
+        break;
+      }
+    }
+    bool likeWhite = false;
+    if (color.red > 150 && color.green > 150 && color.blue > 150) likeWhite = true;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      width: 16.0,
+      height: 16.0,
+      child: Center(
+        child: Text(
+          '${events.length}',
+          style: TextStyle().copyWith(
+            color: likeWhite ? Colors.black : Colors.white,
+            fontSize: 12.0,
+          ),
+        ),
+      ),
     );
   }
 

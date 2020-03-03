@@ -293,7 +293,7 @@ class _HomePageState extends State<HomePage>{
       if(subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length)>= config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
       else c = Colors.orangeAccent;
     }
-    else c = Colors.white;
+    else c = subject.color;
     return Center(
       child: Column(
         children: <Widget>[
