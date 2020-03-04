@@ -270,8 +270,25 @@ class _HomePageState extends State<HomePage>{
       config = Config.fromJson(jsonConfig);
     }
     List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-    if (subjects == []){
-      return Text("教科を登録してください");
+    if (subjects.length == 0){
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text("俺を\n活用しろ\nカス",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 50,
+                  height: 1.2,
+              )
+            ),
+            Text("とりあえず右下のボタンからなんか登録しません?",
+              textAlign: TextAlign.center
+            )
+          ],
+        )
+      );
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index){
