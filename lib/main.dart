@@ -298,7 +298,7 @@ class _HomePageState extends State<HomePage>{
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: size.height * 0.16,
+            height: size.height * 0.2,
             width: size.width,
             child: InkWell(
               onTap: () async {
@@ -344,7 +344,25 @@ class _HomePageState extends State<HomePage>{
                             )
 
                           ]
-                      )
+                      ),
+                      Row(
+                        children:[
+                          Container(
+                            child:
+                              ListView(
+                                scrollDirection: Axis.horizontal,
+                                children:[
+                                  Text("休講数: ${subject.cancelClasses.length}"),
+                                  SizedBox(width: 10),
+                                  Text("残り欠課数: ${(subject.scheduledClassNum * config.redLine - subject.absenceDates.length).toInt()}")
+                                ]
+                              ),
+                              width: size.width * 0.57,
+                              height: size.height * 0.04
+                          )
+                        ]
+                     )
+                      
                     ]),
                       width: size.width * 0.57,
                     ),
