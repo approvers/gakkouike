@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gakkouike/data_manager/subject_pref_util.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -11,6 +12,9 @@ class CalendarExample extends StatefulWidget{
 class _CalendarState extends State<CalendarExample>{
   CalendarController _calendarController;
   List<Subject> subjects;
+  List<dynamic> selectedSublist = [];
+  DateTime selectedDay;
+
   @override
   Widget build(BuildContext context) {// TODO: implement build
     return Scaffold(
@@ -40,81 +44,110 @@ class _CalendarState extends State<CalendarExample>{
 
   Future setAbsence() async{
     subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-    Map<DateTime, List<String>> map = Map();
+    Map<DateTime, List<Subject>> map = Map();
     for (Subject subject in subjects){
       for (DateTime dateTime in subject.absenceDates){
-        if (map[dateTime] is List<String>) map[dateTime].add(subject.name);
-        else map[dateTime] = <String>[subject.name];
+        if (map[dateTime] is List<Subject>) map[dateTime].add(subject);
+        else map[dateTime] = <Subject>[subject];
       }
     }
-    return TableCalendar(
-      calendarController: _calendarController,
-      events: map,
-      onDaySelected: (dateTime, list){
-        if (list.length == 0){
-          list.add("ありません");
-        }
-        showDialog(
-          context: context,
-          builder: (BuildContext context){
-            Size size = MediaQuery.of(context).size;
-            return AlertDialog(
-              title: Text("${dateTime.year.toString()}/"
-                  "${dateTime.month.toString()}/"
-                  "${dateTime.day.toString()}の欠課"),
-              content: Container(
-                width: size.width * 0.8,
-                height: size.height * 0.4,
-                child: ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return
-                    Column(
-                        children:[
-                          Row(
-                            children: <Widget>[
-                              Text(list[index]),
-                            ],
-                          ),
-                          index + 1 == list.length ? Container():
-                              Divider()
-                        ]
+
+
+    return Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TableCalendar(
+              calendarController: _calendarController,
+              events: map,
+              onDaySelected: (dateTime, list){
+                setState(() {
+                  selectedDay = dateTime;
+                  selectedSublist = list;
+                  print(dateTime.toIso8601String());
+                  print(list);
+                });
+              },
+              builders: CalendarBuilders(
+                markersBuilder: (BuildContext context, DateTime date, events, holidays){
+                  final children = <Widget>[];
+                  if (events.isNotEmpty){
+                    children.add(
+                      Positioned(
+                        right: 1,
+                        bottom: 1,
+                        child: _buildEventMarker(date, events),
+                      )
                     );
-                  },
+                  }
+                  return children;
+                }
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                        (selectedDay != null ?
+                          "${selectedDay.year}年${selectedDay.month}月${selectedDay
+                          .day}日の欠課"
+                        :
+                          "日付選んでクレメンス"
+                        ),
+                        style: TextStyle(fontSize: 20)),
+                    Divider(color: Colors.grey),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: selectedSublist.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return  Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(5)),
+                              ),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    gradient: LinearGradient(
+                                      stops: [0.02, 0.02],
+                                      colors: [
+                                        selectedSublist[index].color,
+                                        Colors.white
+                                      ],
+                                    ),
+                                  ),
+                                child: Text(selectedSublist[index].name),
+                                padding: EdgeInsets.fromLTRB(8, 0, 0, 0)
+                              ),
+                          );
+                        }
+                      ),
+                    ),
+                  ]
                 )
-              )
-            );
-          }
-        );
-      },
-      builders: CalendarBuilders(
-        markersBuilder: (BuildContext context, DateTime date, events, holidays){
-          final children = <Widget>[];
-          if (events.isNotEmpty){
-            children.add(
-              Positioned(
-                right: 1,
-                bottom: 1,
-                child: _buildEventMarker(date, events),
-              )
-            );
-          }
-          return children;
-        }
-      ),
+              ),
+            )
+          ]
+        )
     );
   }
 
   Widget _buildEventMarker(DateTime date, events){
-    print(events);
-    String key = events[0];
-    Color color;
-    for (Subject subject in subjects){
-      if (subject.name == key){
-        color = subject.color;
-        break;
-      }
-    }
+    // print(events);
+    Color color = events[0].color;
     bool likeWhite = false;
     if (color.red > 150 && color.green > 150 && color.blue > 150) likeWhite = true;
     return AnimatedContainer(
