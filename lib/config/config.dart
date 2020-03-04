@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../custom_types/config.dart';
@@ -182,6 +183,9 @@ class _ConfigPageState extends State<ConfigRootView>{
                           controller: summerVacationController,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter> [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                          ],
                         ),
                         actions: <Widget>[
                           FlatButton(
@@ -233,6 +237,9 @@ class _ConfigPageState extends State<ConfigRootView>{
                           controller: winterVacationController,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter> [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                          ],
                         ),
                         actions: <Widget>[
                           FlatButton(
@@ -283,6 +290,9 @@ class _ConfigPageState extends State<ConfigRootView>{
                           controller: alertLineController,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter> [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                          ],
                         ),
                         actions: <Widget>[
                           FlatButton(
@@ -375,6 +385,9 @@ class _ConfigPageState extends State<ConfigRootView>{
                           controller: redLineController,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter> [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                          ],
                         ),
                         actions: <Widget>[
                           FlatButton(
