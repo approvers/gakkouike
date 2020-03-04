@@ -278,7 +278,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: "警告ライン",
-                            hintText: "0から1までの中で警告を出すラインを決めてください"
+                            hintText: "0[%]から100[%]までの中で警告を出すラインを決めてください"
                           ),
                           controller: alertLineController,
                           textInputAction: TextInputAction.done,
@@ -292,36 +292,54 @@ class _ConfigPageState extends State<ConfigRootView>{
                               if (_input.trim() == ""){
                                 return;
                               }
-                              try{
-                                double num = double.parse(_input);
-                                if (num >= config.redLine) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context){
-                                        return AlertDialog(
-                                          title: Text("エラー"),
-                                          content: Text(
-                                            "警告ラインは留年ラインより低く設定しろカス",
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text("yeah"),
-                                              onPressed: (){
-                                                Navigator.pop(context);
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      }
-                                  );
-                                }else {
-                                  config.alertLine = num;
-                                  changeAnySetting = true;
-                                  Navigator.of(context).pop();
-                                }
-                              }catch(exception){
-                                return;
+                              double num = double.tryParse(_input) / 100;
+                              if (num < 0 || num > 1) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      print("カス");
+                                      return AlertDialog(
+                                        title: Text("エラー"),
+                                        content: Text(
+                                          "0から100で書けってダイアログに書いたぞ俺",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("sry bot"),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                );
+                              } else if (num >= config.redLine) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      return AlertDialog(
+                                        title: Text("エラー"),
+                                        content: Text(
+                                          "警告ラインは留年ラインより低く設定しろカス",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text("yeah"),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                );
+                              }else {
+                                config.alertLine = num;
+                                changeAnySetting = true;
+                                Navigator.of(context).pop();
                               }
 
                             },
@@ -352,7 +370,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: "留年ライン",
-                            hintText: "0から1までの中で留年が確定するラインを決めてください"
+                            hintText: "0[%]から100[%]までの中で留年が確定するラインを決めてください"
                           ),
                           controller: redLineController,
                           textInputAction: TextInputAction.done,
@@ -366,37 +384,55 @@ class _ConfigPageState extends State<ConfigRootView>{
                               if (_input.trim() == ""){
                                 return;
                               }
-                              try{
-                                double num = double.parse(_input);
-                                if (config.alertLine >= num) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context){
-                                        print("カス");
-                                        return AlertDialog(
-                                          title: Text("エラー"),
-                                          content: Text(
-                                            "警告ラインは留年ラインより低く設定しろカス",
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text("yeah"),
-                                              onPressed: (){
-                                                Navigator.pop(context);
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      }
-                                  );
-                                }else {
-                                  config.redLine = num;
-                                  changeAnySetting = true;
-                                  Navigator.of(context).pop();
-                                }
-                              }catch(exception){
-                                return;
+                            double num = double.tryParse(_input) / 100;
+                            if(num < 0 || num > 1) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context){
+                                    print("カス");
+                                    return AlertDialog(
+                                      title: Text("エラー"),
+                                      content: Text(
+                                        "0から100で書けってダイアログに書いたぞ俺",
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text("sry bro"),
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                );
+                            } else if (config.alertLine >= num) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context){
+                                    print("カス");
+                                    return AlertDialog(
+                                      title: Text("エラー"),
+                                      content: Text(
+                                        "警告ラインは留年ラインより低く設定しろカス",
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text("yeah"),
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                );
+                              } else {
+                                config.redLine = num;
+                                changeAnySetting = true;
+                                Navigator.of(context).pop();
                               }
 
                             },
