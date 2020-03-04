@@ -150,6 +150,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                   });
                 },
               ),
+              Divider(),
 
               CheckboxListTile(
                 activeColor: Colors.blue,
@@ -165,6 +166,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                 },
               ),
 
+              Divider(),
               ListTile(
                 title: Text("夏休みの期間"),
                 subtitle: Text("夏休みの期間を週単位で入力してください"),
@@ -219,6 +221,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                 },
               ),
 
+              Divider(),
               ListTile(
                 title: Text("冬休みの期間"),
                 subtitle: Text("冬休みの期間を週単位で入力してください"),
@@ -271,6 +274,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                   );
                 },
               ),
+              Divider(),
 
               ListTile(
                 title: Text("警告ライン"),
@@ -366,6 +370,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                   );
                 },
               ),
+              Divider(),
 
               ListTile(
                 title: Text("留年ライン"),
@@ -462,6 +467,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                   );
                 },
               ),
+              Divider(),
 
               ListTile(
                 title: Text("始業日"),
@@ -506,6 +512,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                   }
                 },
               ),
+              Divider(),
 
               ListTile(
                 title: Text("終業日"),
