@@ -67,8 +67,20 @@ class _HomePageState extends State<HomePage>{
                                 children: [
                                   Row(
                                     children: <Widget>[
-                                      Text(subjects[index].name,
-                                        style: TextStyle(fontSize: 20),),
+                                      Card(
+                                        child: Padding(
+                                          child: SizedBox(
+                                            child:Text(
+                                              subjects[index].name,
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            height: size.height * 0.05,
+                                            width: size.width * 0.62
+                                          ),
+                                          padding: EdgeInsets.only(top:5, bottom:5)
+                                        ),
+                                        color: subjects[index].color
+                                      ),
                                     ],
                                   ),
 
