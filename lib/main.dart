@@ -11,6 +11,7 @@ import 'custom_types/subject.dart';
 import 'package:gakkouike/cancel_class/cancel_class.dart';
 import 'package:gakkouike/data_manager/subject_adder.dart';
 import 'package:gakkouike/data_manager/subject_pref_util.dart';
+import 'package:gakkouike/data_manager/subject_deleter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'config/inital_config.dart';
 
@@ -176,14 +177,14 @@ class _FABsState extends State<FABs>{
                   child: Text("教科削除"),
                 ),
                 FloatingActionButton(
-                  child: Icon(Icons.block, size: 20,),
+                  child: Icon(Icons.remove, size: 20,),
                   backgroundColor: Colors.deepOrangeAccent,
                   mini: true,
                   onPressed: (){
                     isExpanded ^= true;
                     Navigator.of(context).push(
                       new MaterialPageRoute(
-                        builder: (BuildContext context) => new CancelManagerRoot()
+                        builder: (BuildContext context) => new SubjectDeleter()
                       )
                     );
                   },
