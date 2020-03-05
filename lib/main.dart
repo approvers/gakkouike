@@ -1,10 +1,6 @@
+// 根幹モジュール
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:gakkouike/cancel_class/cancel_class.dart';
-import 'package:gakkouike/data_manager/subject_adder.dart';
-import 'package:gakkouike/data_manager/subject_pref_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 自作モジュール
 import 'calendar/calendar.dart';
@@ -12,6 +8,11 @@ import 'config/config.dart';
 import 'CustomFAB/cool.dart';
 import 'custom_types/config.dart';
 import 'custom_types/subject.dart';
+import 'package:gakkouike/cancel_class/cancel_class.dart';
+import 'package:gakkouike/data_manager/subject_adder.dart';
+import 'package:gakkouike/data_manager/subject_pref_util.dart';
+import 'package:gakkouike/data_manager/subject_deleter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'config/inital_config.dart';
 
 void main() => runApp(MyApp());
@@ -25,107 +26,189 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: HomePageRoot(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePageRoot extends StatelessWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: homePageAppBar(context),
+      floatingActionButton: FABs(),
+      body: HomePageContents()
+    );
+  }
+  Widget homePageAppBar(BuildContext context){
+    return AppBar(
+      title: Text("学校行け"),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage>{
+class FABs extends StatefulWidget{
+  @override
+  _FABsState createState() => _FABsState();
+}
+
+class _FABsState extends State<FABs>{
   bool isExpanded = false;
+  @override
+  Widget build(BuildContext context){
+    return FoldFloatButtonWrap(
+      isExpanded: isExpanded,
+      floatButton:
+      Container(
+        child: FloatingActionButton(
+          child: isExpanded ? Icon(Icons.close) : Icon(Icons.menu),
+          backgroundColor: Colors.deepOrangeAccent,
+          onPressed: (){
+            setState(() {
+              isExpanded ^= true;
+            });
+          },
+        ),
+        height: 60,
+        width: 60,
+      ),
+      expandedWidget: <Widget>[
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text("カレンダー"),
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.calendar_today, size: 20,),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  mini: true,
+                  onPressed: (){
+                    setState(() {
+                      isExpanded ^= true;
+                      Navigator.of(context).push(
+                          new MaterialPageRoute(
+                              builder: (BuildContext context) => new CalendarExample()
+                          )
+                      );
+                    });
+                  },
+                  heroTag: "calendar",
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text("教科追加"),
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.add, size: 20,),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  mini: true,
+                  onPressed: (){
+                    setState(() {
+                      isExpanded ^= true;
+                      Navigator.of(context).push(
+                          new MaterialPageRoute(
+                              builder: (BuildContext context) => new SubjectAdder()
+                          )
+                      );
+                    });
+                  },
+                  heroTag: "adder",
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text("設定"),
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.settings, size: 20,),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  mini: true,
+                  onPressed: ()async{
+                    isExpanded ^= true;
+                    Navigator.of(context).push(
+                        new MaterialPageRoute(
+                            builder: (BuildContext context) => new ConfigRootView()
+                        )
+                    ).then((_){
+                      setState(() {
+                      });
+                    });
+                    setState(() {
+                    });
+                  },
+                  heroTag: "config",
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text("休講"),
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.block, size: 20,),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  mini: true,
+                  onPressed: (){
+                    isExpanded ^= true;
+                    Navigator.of(context).push(
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => new CancelManagerRoot()
+                      )
+                    );
+                  },
+                  heroTag: "cancel",
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text("教科削除"),
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.remove, size: 20,),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  mini: true,
+                  onPressed: (){
+                    isExpanded ^= true;
+                    Navigator.of(context).push(
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => new SubjectDeleter()
+                      )
+                    );
+                  },
+                  heroTag: "remove",
+                )
+              ],
+            )
+
+          ],
+        );
+  }
+}
+
+class HomePageContents extends StatefulWidget{
+  @override
+  _HomePageContentsState createState() => _HomePageContentsState();
+}
+
+class _HomePageContentsState extends State<HomePageContents>{
   bool setting = false;
   Config config;
-
   @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("学校行け"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.remove),
-            onPressed: () async{
-              List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-              showDialog(
-                context: context,
-                builder: (BuildContext context){
-                  return AlertDialog(
-                    title: Text("削除する教科を選択"),
-                    content: Container(
-                      width: size.width * 0.8,
-                      height: size.height * 0.2,
-                      child: ListView.builder(
-                        itemCount: subjects.length,
-                        itemBuilder: (BuildContext context, int index){
-                          return GestureDetector(
-                            child: Column(
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Card(
-                                        child: Padding(
-                                          child: SizedBox(
-                                            child:Text(
-                                              subjects[index].name,
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            height: size.height * 0.05,
-                                            width: size.width * 0.62
-                                          ),
-                                          padding: EdgeInsets.only(top:5, bottom:5)
-                                        ),
-                                        color: subjects[index].color
-                                      ),
-                                    ],
-                                  ),
-
-                                  index + 1 == subjects.length ? Container()
-                                      : Divider()
-                                ]
-                            ),
-                            onTap: (){
-                              showDialog<bool>(
-                                context: context,
-                                builder: (_){
-                                  return AlertDialog(
-                                    title: Text("本当に削除してもいいですか?"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text("No"),
-                                        onPressed: () => Navigator.of(context).pop(false),
-                                      ),
-                                      FlatButton(
-                                        child: Text("Yes"),
-                                        onPressed: () => Navigator.of(context).pop(true),
-                                      )
-                                    ],
-                                  );
-                                }
-                              ).then((v){
-                                if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
-                                Navigator.pop(context);
-                                setState(() {
-
-                                });
-                              });
-                            },
-                          );
-                        }
-                      ),
-                    )
-                  );
-                }
-              );
-            },
-          )
-        ],
-      ),
-      body: FutureBuilder(
+  Widget build(BuildContext context){
+    return FutureBuilder(
         future: loadData(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
           if(snapshot.hasData){
@@ -138,126 +221,7 @@ class _HomePageState extends State<HomePage>{
             );
           }
         },
-      )
-      ,
-      floatingActionButton:
-        FoldFloatButtonWrap(
-          isExpanded: isExpanded,
-          floatButton:
-          Container(
-            child: FloatingActionButton(
-              child: isExpanded ? Icon(Icons.close) : Icon(Icons.menu),
-              backgroundColor: Colors.deepOrangeAccent,
-              onPressed: (){
-                setState(() {
-                  isExpanded ^= true;
-                });
-              },
-            ),
-            height: 60,
-            width: 60,
-          ),
-          expandedWidget: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 80,
-                      child: Text("カレンダー"),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(Icons.calendar_today, size: 20,),
-                      backgroundColor: Colors.deepOrangeAccent,
-                      mini: true,
-                      onPressed: (){
-                        setState(() {
-                          isExpanded ^= true;
-                          Navigator.of(context).push(
-                              new MaterialPageRoute(
-                                  builder: (BuildContext context) => new CalendarExample()
-                              )
-                          );
-                        });
-                      },
-                      heroTag: "calendar",
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 80,
-                      child: Text("教科追加"),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(Icons.add, size: 20,),
-                      backgroundColor: Colors.deepOrangeAccent,
-                      mini: true,
-                      onPressed: (){
-                        setState(() {
-                          isExpanded ^= true;
-                          Navigator.of(context).push(
-                              new MaterialPageRoute(
-                                  builder: (BuildContext context) => new SubjectAdder()
-                              )
-                          );
-                        });
-                      },
-                      heroTag: "adder",
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 80,
-                      child: Text("設定"),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(Icons.settings, size: 20,),
-                      backgroundColor: Colors.deepOrangeAccent,
-                      mini: true,
-                      onPressed: ()async{
-                        isExpanded ^= true;
-                        Navigator.of(context).push(
-                            new MaterialPageRoute(
-                                builder: (BuildContext context) => new ConfigRootView()
-                            )
-                        ).then((_){
-                          setState(() {
-                          });
-                        });
-                        setState(() {
-                        });
-                      },
-                      heroTag: "config",
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 80,
-                      child: Text("休講"),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(Icons.block, size: 20,),
-                      backgroundColor: Colors.deepOrangeAccent,
-                      mini: true,
-                      onPressed: (){
-                        isExpanded ^= true;
-                        Navigator.of(context).push(
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) => new CancelManagerRoot()
-                          )
-                        );
-                      },
-                      heroTag: "cancel",
-                    )
-                  ],
-                )
-              ],
-            ),
-    );
+      );
   }
 
   Future loadData()async{
@@ -304,25 +268,47 @@ class _HomePageState extends State<HomePage>{
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index){
-        return view(
-          context,
-          subjects[index],
-          config,
-          index
+        return CardsContents(
+          subject: subjects[index],
+          config: config,
+          index: index,
+          parentWidget: this
         );
       },
       itemCount: subjects.length,
     );
   }
+}
 
-  Widget view(BuildContext context, Subject subject, Config config, int index) {
+
+
+class CardsContents extends StatefulWidget{
+  CardsContents(
+    {
+      this.subject,
+      this.config,
+      this.index,
+      this.parentWidget
+    }
+   );
+  Subject subject;
+  Config config;
+  int index;
+  var parentWidget;
+  @override
+  _CardsContentsState createState() => _CardsContentsState();
+}
+
+class _CardsContentsState extends State<CardsContents>{
+  @override
+  Widget build(BuildContext context){
     Size size = MediaQuery.of(context).size;
     Color c;
-    if (subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length) >= config.alertLine){
-      if(subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length)>= config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
+    if (widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length) >= widget.config.alertLine){
+      if(widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length)>= widget.config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
       else c = Colors.orangeAccent;
     }
-    else c = subject.color;
+    else c = widget.subject.color;
     return Center(
       child: Column(
         children: <Widget>[
@@ -333,7 +319,7 @@ class _HomePageState extends State<HomePage>{
               onTap: () async {
                 Navigator.of(context).push(
                   new MaterialPageRoute(
-                      builder: (BuildContext context) => SubjectAdder(subject: subject, index: index)
+                      builder: (BuildContext context) => SubjectAdder(subject: widget.subject, index: widget.index)
                   )
                 );
               },
@@ -350,7 +336,7 @@ class _HomePageState extends State<HomePage>{
                       ),
                       SizedBox(
                         child: Text(
-                          subject.name,
+                          widget.subject.name,
                           style: TextStyle(fontSize: 28,),
                         ),
                         width: size.width * 0.45,
@@ -363,9 +349,9 @@ class _HomePageState extends State<HomePage>{
                                 ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: <Widget>[
-                                    Text("欠課率 : ${(subject.absenceDates.length / (subject.scheduledClassNum - subject.cancelClasses.length) * 100).toStringAsFixed(1)}%"),
+                                    Text("欠課率 : ${(widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length) * 100).toStringAsFixed(1)}%"),
                                     SizedBox(width: 10,),
-                                    Text("欠課時数 : ${subject.absenceDates.length}")
+                                    Text("欠課時数 : ${widget.subject.absenceDates.length}")
                                   ],
                                 ),
                               width: size.width * 0.57,
@@ -381,9 +367,9 @@ class _HomePageState extends State<HomePage>{
                               ListView(
                                 scrollDirection: Axis.horizontal,
                                 children:[
-                                  Text("休講数: ${subject.cancelClasses.length}"),
+                                  Text("休講数: ${widget.subject.cancelClasses.length}"),
                                   SizedBox(width: 10),
-                                  Text("残り欠課数: ${(subject.scheduledClassNum * config.redLine - subject.absenceDates.length).toInt()}")
+                                  Text("残り欠課数: ${(widget.subject.scheduledClassNum * widget.config.redLine - widget.subject.absenceDates.length).toInt()}")
                                 ]
                               ),
                               width: size.width * 0.57,
@@ -400,32 +386,30 @@ class _HomePageState extends State<HomePage>{
                       child: IconButton(
                         icon: Icon(Icons.add, size: 25),
                         onPressed: () async{
-                          if(config.smartSet){
+                          if(widget.config.smartSet){
                             DateTime n = DateTime.now();
                             List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                            subjects[index].absenceDates.add(DateTime(n.year, n.month, n.day));
+                            subjects[widget.index].absenceDates.add(DateTime(n.year, n.month, n.day));
                             await SubjectPreferenceUtil.saveSubjectList(subjects);
-                            subject = subjects[index];
+                            widget.subject = subjects[widget.index];
                           }else{
-                            print(config.startClass.isAfter(DateTime.now()));
-                            print(config.startClass);
                             final DateTime cache = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
-                                firstDate: config.startClass.isAfter(DateTime.now()) ?
-                                            DateTime.now().subtract(new Duration(days: 1)): config.startClass ,
-                                lastDate: config.endClass.isBefore(DateTime.now()) ?
-                                            DateTime.now().add(new Duration(days: 1)) : config.endClass
+                                firstDate: widget.config.startClass.isAfter(DateTime.now()) ?
+                                            DateTime.now().subtract(new Duration(days: 1)): widget.config.startClass ,
+                                lastDate: widget.config.endClass.isBefore(DateTime.now()) ?
+                                            DateTime.now().add(new Duration(days: 1)) : widget.config.endClass
                             );
                             if (cache != null){
-                              if (cache.isAfter(config.startClass) && cache.isBefore(config.endClass)) {
+                              if (cache.isAfter(widget.config.startClass) && cache.isBefore(widget.config.endClass)) {
                                 List<Subject> subjects = await SubjectPreferenceUtil
                                     .getSubjectListFromPref();
-                                subjects[index].absenceDates.add(
+                                subjects[widget.index].absenceDates.add(
                                     DateTime(cache.year, cache.month, cache.day));
                                 await SubjectPreferenceUtil.
                                   saveSubjectList(subjects);
-                                subject = subjects[index];
+                                widget.subject = subjects[widget.index];
                               }
                               else showDialog(
                                 context: context,
@@ -449,7 +433,7 @@ class _HomePageState extends State<HomePage>{
                               );
                             }
                           }
-                          setState(() {
+                          widget.parentWidget.setState(() {
 
                           });
                         },
@@ -466,7 +450,7 @@ class _HomePageState extends State<HomePage>{
                         icon: Icon(Icons.remove, size: 25,),
                         onPressed: () async{
                           List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                          if(subjects[index].absenceDates.length == 0){
+                          if(subjects[widget.index].absenceDates.length == 0){
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -480,17 +464,17 @@ class _HomePageState extends State<HomePage>{
                                       child: Text("yeah"),
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        setState(() {});
+                                        widget.parentWidget.setState(() {});
                                       },
                                     )
                                   ]
                                 );
                               }
                             );
-                          }else if(config.smartDelete){
-                            subjects[index].absenceDates.removeLast();
+                          }else if(widget.config.smartDelete){
+                            subjects[widget.index].absenceDates.removeLast();
                             await SubjectPreferenceUtil.saveSubjectList(subjects);
-                            subject = subjects[index];
+                            widget.subject = subjects[widget.index];
                           }else{
                             showDialog(
                                 context: context,
@@ -504,21 +488,21 @@ class _HomePageState extends State<HomePage>{
                                         width: size.width * 0.8,
                                         height: size.height * 0.6,
                                         child: ListView.builder(
-                                          itemCount: subject.absenceDates.length,
+                                          itemCount: widget.subject.absenceDates.length,
                                           itemBuilder: (BuildContext context, int i){
                                             return GestureDetector(
                                               child: ListTile(
-                                                title: Text("${subject.absenceDates[i].year}/"
-                                                    "${subject.absenceDates[i].month}/"
-                                                    "${subject.absenceDates[i].day}"),
+                                                title: Text("${widget.subject.absenceDates[i].year}/"
+                                                    "${widget.subject.absenceDates[i].month}/"
+                                                    "${widget.subject.absenceDates[i].day}"),
                                               ),
                                               onTap: ()async{
                                                 List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
-                                                subjects[index].absenceDates.removeAt(i);
+                                                subjects[widget.index].absenceDates.removeAt(i);
                                                 await SubjectPreferenceUtil.saveSubjectList(subjects);
-                                                subject = subjects[index];
+                                                widget.subject = subjects[widget.index];
                                                 Navigator.pop(context);
-                                                setState(() {
+                                                widget.parentWidget.setState(() {
 
                                                 });
                                               },
@@ -531,7 +515,7 @@ class _HomePageState extends State<HomePage>{
                                 }
                             );
                           }
-                          setState(() {
+                          widget.parentWidget.setState(() {
 
                           });
                         },
@@ -550,5 +534,102 @@ class _HomePageState extends State<HomePage>{
         ],
       ),
     );
+
+  }
+}
+
+
+class AppBarContent extends StatefulWidget {
+  AppBarContent(
+    {
+      this.parentWidget
+    }
+  );
+  var parentWidget;
+  @override
+  _AppBarContentState createState() => _AppBarContentState();
+}
+
+class _AppBarContentState extends State<AppBarContent>{
+  @override
+  Widget build(BuildContext context){
+    Size size = MediaQuery.of(context).size;
+    return IconButton(
+      icon: Icon(Icons.remove),
+        onPressed: () async{
+          List<Subject> subjects = await SubjectPreferenceUtil.getSubjectListFromPref();
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("削除する教科を選択"),
+                content: Container(
+                  width: size.width * 0.8,
+                  height: size.height * 0.2,
+                  child: ListView.builder(
+                    itemCount: subjects.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return GestureDetector(
+                         child: Column(
+                           children: [
+                             Row(
+                               children: <Widget>[
+                                 Card(
+                                   child: Padding(
+                                     child: SizedBox(
+                                       child:Text(
+                                         subjects[index].name,
+                                         style: TextStyle(fontSize: 20),
+                                       ),
+                                       height: size.height * 0.05,
+                                       width: size.width * 0.62
+                                     ),
+                                     padding: EdgeInsets.only(top:5, bottom:5)
+                                   ),
+                                   color: subjects[index].color
+                                 ),
+                               ],
+                             ),
+
+                             index + 1 == subjects.length ? Container()
+                                 : Divider()
+                           ]
+                       ),
+                       onTap: (){
+                         showDialog<bool>(
+                           context: context,
+                           builder: (_){
+                             return AlertDialog(
+                               title: Text("本当に削除してもいいですか?"),
+                               actions: <Widget>[
+                                 FlatButton(
+                                   child: Text("No"),
+                                   onPressed: () => Navigator.of(context).pop(false),
+                                 ),
+                                 FlatButton(
+                                   child: Text("Yes"),
+                                   onPressed: () => Navigator.of(context).pop(true),
+                                 )
+                               ],
+                             );
+                           }
+                         ).then((v){
+                           if (v) SubjectPreferenceUtil.deleteSubjectAt(index);
+                           Navigator.pop(context);
+                           widget.parentWidget.setState(() {
+
+                           });
+                         });
+                       },
+                      );
+                    }
+                      ),
+                    )
+                  );
+                }
+              );
+            },
+    );
+
   }
 }
