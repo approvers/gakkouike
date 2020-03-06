@@ -45,6 +45,36 @@ class _SubjectAdderState extends State<SubjectAdder>{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+	Color nowColor;
+	if(int.tryParse(calcedTextController.text) != null && int.tryParse(redTextController.text) != null &&
+      int.tryParse(greenTextController.text) != null && int.tryParse(blueTextController.text) != null)
+   	if(int.tryParse(redTextController.text) >= 0 && int.tryParse(redTextController.text) <= 255 &&
+
+		int.tryParse(greenTextController.text) >=0 && int.tryParse(greenTextController.text) <= 255 &&
+		int.tryParse(blueTextController.text) >= 0  && int.tryParse(blueTextController.text) <= 255) {
+	  int red = int.parse(redTextController.text);
+      int green = int.parse(greenTextController.text);
+      int blue = int.parse(blueTextController.text);
+      String rHash = red.toRadixString(16);
+      String gHash = green.toRadixString(16);
+      String bHash = blue.toRadixString(16);
+      if (red < 10){
+        rHash = "0$rHash";
+      }
+      if (green < 10){
+        gHash = "0$gHash";
+      }
+      if (blue < 10){
+        bHash = "0$bHash";
+      }
+
+      String colorCode = "0xff$rHash$gHash$bHash";
+	  nowColor = Color(int.parse(colorCode));
+	}else{
+	  String colorCode = "0xffffffff";
+	  nowColor = Color(int.parse(colorCode));
+	}
+
     return Scaffold(
       appBar: AppBar(title: Text("教科を追加する"),),
       body: Container(
@@ -165,12 +195,31 @@ class _SubjectAdderState extends State<SubjectAdder>{
                 Container(
                   margin: EdgeInsets.all(20)
                 ),
+				Row(
+				  children: <Widget>[
+				    Text("色のサンプル"),
+					Container(
+					  width: size.width * 0.1,
+					  height: size.width * 0.1,
+					  decoration: BoxDecoration(
+					  	color: nowColor,
+						shape: BoxShape.circle
+
+					  )
+					),
+					RaisedButton(
+					  child: Text("確認する"),
+					  onPressed: (){
+						setState((){});
+					  }
+					)
+				  ]
+				),
                 RaisedButton(
                   child: Text("追加する"),
                   shape: UnderlineInputBorder(),
                   // ignore: missing_return
                   onPressed: () async {
-                    print(blueTextController.text);
                     if(nameTextController.text.trim() == "" || calcedTextController.text.trim() == "" ||
                         redTextController.text.trim() == "" || greenTextController.text.trim() == "" ||
                         blueTextController.text.trim() == ""
@@ -191,7 +240,6 @@ class _SubjectAdderState extends State<SubjectAdder>{
                         }
                       );
                     }
-                    print(int.tryParse(blueTextController.text));
                     if(int.tryParse(calcedTextController.text) == null || int.tryParse(redTextController.text) == null ||
                         int.tryParse(greenTextController.text) == null || int.tryParse(blueTextController.text) == null) {
                       return showDialog(
