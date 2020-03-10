@@ -103,11 +103,11 @@ class _CancelManagerRootState extends State<CancelManagerRoot>{
                           onPressed: () async{
                             final DateTime cache = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: config.startClass.isAfter(DateTime.now()) ?
-                                DateTime.now().subtract(new Duration(days: 1)): config.startClass ,
-                                lastDate: config.endClass.isBefore(DateTime.now()) ?
-                                DateTime.now().add(new Duration(days: 1)) : config.endClass
+                                initialDate: config.startClass.isAfter(DateTime.now()) ? 
+                                  config.startClass : config.endClass.isBefore(DateTime.now()) ?
+                                    config.endClass : DateTime.now(),
+                                firstDate: config.startClass,
+                                lastDate: config.endClass,
                             );
                             if (cache != null){
                               if (cache.isAfter(config.startClass) && cache.isBefore(config.endClass)) {
