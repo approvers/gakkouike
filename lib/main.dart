@@ -395,11 +395,11 @@ class _CardsContentsState extends State<CardsContents>{
                           }else{
                             final DateTime cache = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: widget.config.startClass.isAfter(DateTime.now()) ?
-                                            DateTime.now().subtract(new Duration(days: 1)): widget.config.startClass ,
-                                lastDate: widget.config.endClass.isBefore(DateTime.now()) ?
-                                            DateTime.now().add(new Duration(days: 1)) : widget.config.endClass
+                                initialDate: widget.config.startClass.isAfter(DateTime.now()) ? 
+                                  widget.config.startClass : widget.config.endClass.isBefore(DateTime.now()) ?
+                                    widget.config.endClass : DateTime.now(),
+                                firstDate: widget.config.startClass,
+                                lastDate: widget.config.endClass,
                             );
                             if (cache != null){
                               if (cache.isAfter(widget.config.startClass) && cache.isBefore(widget.config.endClass)) {
