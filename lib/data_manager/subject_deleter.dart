@@ -71,6 +71,10 @@ class _SubjectDeleterState extends State<SubjectDeleterContent>{
       itemCount: subjects.length,
       itemBuilder: (BuildContext context, int index){
         Subject subject = subjects[index];
+        bool likeBlack = false;
+        Color c = subject.color;
+        if (c.red < 155 && c.blue < 155 && c.green < 155)
+          likeBlack = true;
 
         return GestureDetector(
           child: Card(
@@ -81,7 +85,8 @@ class _SubjectDeleterState extends State<SubjectDeleterContent>{
                 child: Text(
                   subject.name,
                   style: TextStyle(
-                    fontSize:40
+                    fontSize:40,
+                    color: likeBlack ? Colors.white : Colors.black
                   )
                 )
               )
