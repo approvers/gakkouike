@@ -304,11 +304,16 @@ class _CardsContentsState extends State<CardsContents>{
   Widget build(BuildContext context){
     Size size = MediaQuery.of(context).size;
     Color c;
+    bool likeBrack = false;
+
     if (widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length) >= widget.config.alertLine){
       if(widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length)>= widget.config.redLine) c = Color.fromARGB(255, 0xff, 0x33, 0x33);
       else c = Colors.orangeAccent;
     }
     else c = widget.subject.color;
+    if(c.red < 155 && c.blue < 155 && c.green < 155)
+      likeBrack = true;
+    
     return Center(
       child: Column(
         children: <Widget>[
@@ -337,7 +342,10 @@ class _CardsContentsState extends State<CardsContents>{
                       SizedBox(
                         child: Text(
                           widget.subject.name,
-                          style: TextStyle(fontSize: 28,),
+                          style: TextStyle(
+                            fontSize: 28,
+                            color: likeBrack ? Colors.white : Colors.black
+                          ),
                         ),
                         width: size.width * 0.45,
                       ),
@@ -349,9 +357,20 @@ class _CardsContentsState extends State<CardsContents>{
                                 ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: <Widget>[
-                                    Text("欠課率 : ${(widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length) * 100).toStringAsFixed(1)}%"),
+                                    Text(
+                                      "欠課率 : ${(widget.subject.absenceDates.length / (widget.subject.scheduledClassNum - widget.subject.cancelClasses.length) * 100).toStringAsFixed(1)}%",
+                                      style: TextStyle(
+                                        color: likeBrack ? Colors.white : Colors. black
+                                      )
+                                    ),
                                     SizedBox(width: 10,),
-                                    Text("欠課時数 : ${widget.subject.absenceDates.length}")
+                                    Text(
+                                      "欠課時数 : ${widget.subject.absenceDates.length}",
+                                      style: TextStyle(
+                                        color: likeBrack ? Colors.white : Colors.black
+                                      )
+                                    
+                                    )
                                   ],
                                 ),
                               width: size.width * 0.57,
@@ -367,9 +386,19 @@ class _CardsContentsState extends State<CardsContents>{
                               ListView(
                                 scrollDirection: Axis.horizontal,
                                 children:[
-                                  Text("休講数: ${widget.subject.cancelClasses.length}"),
+                                  Text(
+                                    "休講数: ${widget.subject.cancelClasses.length}",
+                                    style: TextStyle(
+                                      color: likeBrack ? Colors.white : Colors.black
+                                    )
+                                  ),
                                   SizedBox(width: 10),
-                                  Text("残り欠課数: ${(widget.subject.scheduledClassNum * widget.config.redLine - widget.subject.absenceDates.length).toInt()}")
+                                  Text(
+                                    "残り欠課数: ${(widget.subject.scheduledClassNum * widget.config.redLine - widget.subject.absenceDates.length).toInt()}",
+                                    style: TextStyle(
+                                      color: likeBrack ? Colors.white : Colors.black
+                                    )
+                                  )
                                 ]
                               ),
                               width: size.width * 0.57,
