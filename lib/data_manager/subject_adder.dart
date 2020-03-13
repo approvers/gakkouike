@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gakkouike/config/config.dart';
-import 'package:gakkouike/data_manager/subject_pref_util.dart';
+import 'package:pucis/config/config.dart';
+import 'package:pucis/data_manager/subject_pref_util.dart';
 
 import '../custom_types/subject.dart';
 

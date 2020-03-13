@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gakkouike/data_manager/subject_pref_util.dart';
+import 'package:pucis/data_manager/subject_pref_util.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:gakkouike/custom_types/subject.dart';
+import 'package:pucis/custom_types/subject.dart';
 
 class CalendarExample extends StatefulWidget{
   @override

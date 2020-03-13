@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gakkouike/custom_types/config.dart';
-import 'package:gakkouike/custom_types/subject.dart';
-import 'package:gakkouike/data_manager/subject_pref_util.dart';
+import 'package:pucis/custom_types/config.dart';
+import 'package:pucis/custom_types/subject.dart';
+import 'package:pucis/data_manager/subject_pref_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CancelManagerRoot extends StatefulWidget {

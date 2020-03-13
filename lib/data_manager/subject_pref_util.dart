@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gakkouike/custom_types/subject.dart';
+import 'package:pucis/custom_types/subject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// SubjectのリストとSharedPreferencesの肩代わりをします

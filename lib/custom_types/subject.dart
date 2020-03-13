@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:gakkouike/custom_types/config.dart';
+import 'package:pucis/custom_types/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 教科ごとの欠課を管理するクラス。
