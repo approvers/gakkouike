@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'subject_pref_util.dart';
-import 'package:gakkouike/custom_types/subject.dart';
+import 'package:pucis/custom_types/subject.dart';
 
 class SubjectDeleter extends StatelessWidget{
   @override

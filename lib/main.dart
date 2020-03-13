@@ -8,10 +8,10 @@ import 'config/config.dart';
 import 'CustomFAB/cool.dart';
 import 'custom_types/config.dart';
 import 'custom_types/subject.dart';
-import 'package:gakkouike/cancel_class/cancel_class.dart';
-import 'package:gakkouike/data_manager/subject_adder.dart';
-import 'package:gakkouike/data_manager/subject_pref_util.dart';
-import 'package:gakkouike/data_manager/subject_deleter.dart';
+import 'package:pucis/cancel_class/cancel_class.dart';
+import 'package:pucis/data_manager/subject_adder.dart';
+import 'package:pucis/data_manager/subject_pref_util.dart';
+import 'package:pucis/data_manager/subject_deleter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'config/inital_config.dart';
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '学校行け',
+      title: 'Pucis',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -42,7 +42,7 @@ class HomePageRoot extends StatelessWidget {
   }
   Widget homePageAppBar(BuildContext context){
     return AppBar(
-      title: Text("学校行け"),
+      title: Text("Pucis"),
     );
   }
 }
