@@ -67,128 +67,99 @@ class _FABsState extends State<FABs> {
         width: 60,
       ),
       expandedWidget: <Widget>[
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 80,
-              child: Text("カレンダー"),
-            ),
-            FloatingActionButton(
-              child: Icon(
-                Icons.calendar_today,
-                size: 20,
-              ),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: () {
-                setState(() {
-                  isExpanded ^= true;
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          new CalendarExample()));
-                });
-              },
-              heroTag: "calendar",
-            ),
-          ],
+        FABRow(
+          label: "カレンダー",
+          icon: Icons.calendar_today,
+          onPressed: () {
+            setState(() {
+              isExpanded ^= true;
+              Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) => new CalendarExample()));
+            });
+          },
+          heroTag: "calendar",
         ),
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 80,
-              child: Text("教科追加"),
-            ),
-            FloatingActionButton(
-              child: Icon(
-                Icons.add,
-                size: 20,
-              ),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: () {
-                setState(() {
-                  isExpanded ^= true;
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new SubjectAdder()));
-                });
-              },
-              heroTag: "adder",
-            ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 80,
-              child: Text("設定"),
-            ),
-            FloatingActionButton(
-              child: Icon(
-                Icons.settings,
-                size: 20,
-              ),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: () async {
-                isExpanded ^= true;
-                Navigator.of(context)
-                    .push(new MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            new ConfigRootView()))
-                    .then((_) {
-                  setState(() {});
-                });
-                setState(() {});
-              },
-              heroTag: "config",
-            ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 80,
-              child: Text("休講"),
-            ),
-            FloatingActionButton(
-              child: Icon(
-                Icons.block,
-                size: 20,
-              ),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: () {
+        FABRow(
+            label: "教科追加",
+            onPressed: () {
+              setState(() {
                 isExpanded ^= true;
                 Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new CancelManagerRoot()));
-              },
-              heroTag: "cancel",
-            )
-          ],
+                    builder: (BuildContext context) => new SubjectAdder()));
+              });
+            },
+            icon: Icons.add,
+            heroTag: "adder"),
+        FABRow(
+          label: "設定",
+          onPressed: () {
+            isExpanded ^= true;
+            Navigator.of(context)
+                .push(new MaterialPageRoute(
+                    builder: (BuildContext context) => new ConfigRootView()))
+                .then((_) {
+              setState(() {});
+            });
+            setState(() {});
+          },
+          icon: Icons.settings,
+          heroTag: "config",
         ),
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 80,
-              child: Text("教科削除"),
-            ),
-            FloatingActionButton(
-              child: Icon(
-                Icons.remove,
-                size: 20,
-              ),
-              backgroundColor: Colors.deepOrangeAccent,
-              mini: true,
-              onPressed: () {
-                isExpanded ^= true;
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) => new SubjectDeleter()));
-              },
-              heroTag: "remove",
-            )
-          ],
+        FABRow(
+          label: "休講",
+          icon: Icons.block,
+          onPressed: () {
+            isExpanded ^= true;
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => new CancelManagerRoot()));
+          },
+          heroTag: "cancel",
+        ),
+        FABRow(
+          label: "教科削除",
+          icon: Icons.remove,
+          onPressed: () {
+            isExpanded ^= true;
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => new SubjectDeleter()));
+          },
+          heroTag: "remove",
         )
+      ],
+    );
+  }
+}
+
+class FABRow extends StatelessWidget {
+  const FABRow(
+      {@required this.label,
+      @required this.onPressed,
+      @required this.icon,
+      @required this.heroTag});
+
+  final String label;
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String heroTag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 80,
+          child: Text(label),
+        ),
+        FloatingActionButton(
+          child: Icon(
+            icon,
+            size: 20,
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
+          mini: true,
+          onPressed: onPressed,
+          heroTag: heroTag,
+        ),
       ],
     );
   }
