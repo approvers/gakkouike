@@ -156,13 +156,13 @@ class RemoveAbsenceButton extends StatelessWidget {
             Icons.remove,
             size: 25,
           ),
-          onPressed: () async {
+          onPressed: () {
             if (widget.subject.absenceDates.length == 0) {
               showNoAbsenceDialog(context);
             } else if (widget.config.smartDelete) {
               widget.onDeleteAbsence(widget.subject.absenceDates.length - 1);
             } else {
-              await showDeleteDialog(context, size);
+              showDeleteDialog(context, size);
             }
           },
         ),
