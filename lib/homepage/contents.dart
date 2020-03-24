@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../config/inital_config.dart';
 import '../custom_types/config.dart';
 import '../custom_types/subject.dart';
+import '../data_manager/subject_adder.dart';
+import '../data_manager/subject_pref_util.dart';
 import '../data_manager/subject_pref_util.dart';
 
 class HomePageContents extends StatefulWidget {
@@ -78,8 +80,21 @@ class _HomePageContentsState extends State<HomePageContents> {
         return CardsContents(
             subject: subjects[index],
             config: config,
-            index: index,
-            parentWidget: this);
+            onTap: () {
+              Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      SubjectAdder(subject: subjects[index], index: index)));
+            },
+            onAddAbsence: (DateTime time) async {
+              subjects[index].absenceDates.add(time);
+              await SubjectPreferenceUtil.saveSubjectList(subjects);
+              setState(() {});
+            },
+            onDeleteAbsence: (int index) async {
+              subjects[index].absenceDates.removeAt(index);
+              await SubjectPreferenceUtil.saveSubjectList(subjects);
+              setState(() {});
+            });
       },
       itemCount: subjects.length,
     );
