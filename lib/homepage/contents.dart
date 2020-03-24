@@ -9,7 +9,6 @@ import '../custom_types/config.dart';
 import '../custom_types/subject.dart';
 import '../data_manager/subject_adder.dart';
 import '../data_manager/subject_pref_util.dart';
-import '../data_manager/subject_pref_util.dart';
 
 class HomePageContents extends StatefulWidget {
   @override
