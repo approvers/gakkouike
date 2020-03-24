@@ -25,12 +25,11 @@ class FoldAnimationWrap extends StatefulWidget {
 
   final Widget child;
 
-  FoldAnimationWrap({
-    @required this.duration,
-    this.animationCurve = Curves.ease,
-    @required this.isExpanded,
-    this.child
-  });
+  FoldAnimationWrap(
+      {@required this.duration,
+      this.animationCurve = Curves.ease,
+      @required this.isExpanded,
+      this.child});
 
   @override
   State<StatefulWidget> createState() {
@@ -38,21 +37,21 @@ class FoldAnimationWrap extends StatefulWidget {
   }
 }
 
-class _FoldAnimationWrapState extends State<FoldAnimationWrap> with TickerProviderStateMixin {
+class _FoldAnimationWrapState extends State<FoldAnimationWrap>
+    with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _expandAnimation;
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-      reverseDuration: widget.duration
-    );
-    _expandAnimation = _controller.drive(
-        CurveTween(curve: widget.animationCurve)
-    );
-    if(widget.isExpanded){
+        duration: widget.duration,
+        vsync: this,
+        reverseDuration: widget.duration);
+    _expandAnimation =
+        _controller.drive(CurveTween(curve: widget.animationCurve));
+    if (widget.isExpanded) {
       _controller.value = 1;
     }
   }
@@ -60,18 +59,17 @@ class _FoldAnimationWrapState extends State<FoldAnimationWrap> with TickerProvid
   @override
   void didUpdateWidget(FoldAnimationWrap oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.isExpanded != widget.isExpanded){
-      if(widget.isExpanded){
+    if (oldWidget.isExpanded != widget.isExpanded) {
+      if (widget.isExpanded) {
         _controller.forward();
-      }
-      else {
+      } else {
         _controller.reverse();
       }
     }
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _expandAnimation,
       child: widget.child,
@@ -93,11 +91,10 @@ class FoldFloatButtonWrap extends StatelessWidget {
   final List<Widget> expandedWidget;
   final Duration foldAnimationDuration = Duration(milliseconds: 400);
 
-  FoldFloatButtonWrap({
-    @required this.isExpanded,
-    @required this.floatButton,
-    @required this.expandedWidget
-  });
+  FoldFloatButtonWrap(
+      {@required this.isExpanded,
+      @required this.floatButton,
+      @required this.expandedWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -106,39 +103,40 @@ class FoldFloatButtonWrap extends StatelessWidget {
       overflow: Overflow.visible,
       children: <Widget>[
         // 背景
-        isExpanded ?
-        Positioned(
-          top: -32,
-          left: -32,
-          right: -32,
-          bottom: -32,
-          child: FoldAnimationWrap(
-            duration: foldAnimationDuration,
-            isExpanded: isExpanded,
-            child: FloatButtonBackground(
-              color: Color.fromARGB(50, 0, 0, 0),
-            ),
-          ),
-        ) : Container(),
+        isExpanded
+            ? Positioned(
+                top: -32,
+                left: -32,
+                right: -32,
+                bottom: -32,
+                child: FoldAnimationWrap(
+                  duration: foldAnimationDuration,
+                  isExpanded: isExpanded,
+                  child: FloatButtonBackground(
+                    color: Color.fromARGB(50, 0, 0, 0),
+                  ),
+                ),
+              )
+            : Container(),
 
         Positioned(
           bottom: -10,
           right: -10,
           child: Column(
             children: <Widget>[
-              isExpanded ?
-              FoldAnimationWrap(
-                isExpanded: isExpanded,
-                duration: foldAnimationDuration,
-                child: Card(
-                  child: Padding(child:
-                  Column(
-                    children: expandedWidget,
-                  ),
-                  padding: EdgeInsets.all(5.0),
-                  )
-                ),
-              ) : Container(),
+              isExpanded
+                  ? FoldAnimationWrap(
+                      isExpanded: isExpanded,
+                      duration: foldAnimationDuration,
+                      child: Card(
+                          child: Padding(
+                        child: Column(
+                          children: expandedWidget,
+                        ),
+                        padding: EdgeInsets.all(5.0),
+                      )),
+                    )
+                  : Container(),
               floatButton
             ],
           ),
