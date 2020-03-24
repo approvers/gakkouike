@@ -3,42 +3,36 @@ import 'package:flutter/material.dart';
 import '../custom_types/config.dart';
 import '../custom_types/subject.dart';
 
-class CardsContents extends StatefulWidget {
+class CardsContents extends StatelessWidget {
   CardsContents(
       {@required this.subject,
       @required this.config,
       @required this.onTap,
       @required this.onAddAbsence,
       @required this.onDeleteAbsence});
-  Subject subject;
-  Config config;
+  final Subject subject;
+  final Config config;
   final VoidCallback onTap;
   final void Function(DateTime) onAddAbsence;
   final void Function(int) onDeleteAbsence;
-  @override
-  _CardsContentsState createState() => _CardsContentsState();
-}
 
-class _CardsContentsState extends State<CardsContents> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Color c;
     bool likeBlack = false;
 
-    if (widget.subject.absenceDates.length /
-            (widget.subject.scheduledClassNum -
-                widget.subject.cancelClasses.length) >=
-        widget.config.alertLine) {
-      if (widget.subject.absenceDates.length /
-              (widget.subject.scheduledClassNum -
-                  widget.subject.cancelClasses.length) >=
-          widget.config.redLine)
+    if (subject.absenceDates.length /
+            (subject.scheduledClassNum - subject.cancelClasses.length) >=
+        config.alertLine) {
+      if (subject.absenceDates.length /
+              (subject.scheduledClassNum - subject.cancelClasses.length) >=
+          config.redLine)
         c = Color.fromARGB(255, 0xff, 0x33, 0x33);
       else
         c = Colors.orangeAccent;
     } else
-      c = widget.subject.color;
+      c = subject.color;
     if (c.red < 155 && c.blue < 155 && c.green < 155) likeBlack = true;
 
     return Center(
@@ -48,7 +42,7 @@ class _CardsContentsState extends State<CardsContents> {
             height: size.height * 0.2,
             width: size.width,
             child: InkWell(
-              onTap: widget.onTap,
+              onTap: this.onTap,
               child: Card(
                 child: Row(
                   children: <Widget>[
@@ -56,9 +50,9 @@ class _CardsContentsState extends State<CardsContents> {
                       width: size.width * 0.02,
                     ),
                     SubjectStats(
-                        size: size, widget: widget, likeBlack: likeBlack),
-                    AddAbsenceButton(widget: widget, size: size),
-                    RemoveAbsenceButton(widget: widget, size: size)
+                        size: size, widget: this, likeBlack: likeBlack),
+                    AddAbsenceButton(widget: this, size: size),
+                    RemoveAbsenceButton(widget: this, size: size)
                   ],
                 ),
                 color: c,
