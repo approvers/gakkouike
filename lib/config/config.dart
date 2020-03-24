@@ -9,12 +9,14 @@ class ConfigRootView extends StatefulWidget {
   _ConfigPageState createState() => _ConfigPageState();
 }
 
-class _ConfigPageState extends State<ConfigRootView>{
+class _ConfigPageState extends State<ConfigRootView> {
   bool changeAnySetting = false;
   bool first = true;
   Config config;
-  final TextEditingController summerVacationController = new TextEditingController();
-  final TextEditingController winterVacationController = new TextEditingController();
+  final TextEditingController summerVacationController =
+      new TextEditingController();
+  final TextEditingController winterVacationController =
+      new TextEditingController();
   final TextEditingController alertLineController = new TextEditingController();
   final TextEditingController redLineController = new TextEditingController();
 
@@ -23,16 +25,14 @@ class _ConfigPageState extends State<ConfigRootView>{
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if(changeAnySetting) {
+        if (changeAnySetting) {
           int exitCode = await showDialog<int>(
               context: context,
               builder: (_) {
                 return AlertDialog(
                   title: Text("ああ待って待って"),
-                  content: Text(
-                      "設定変えられてるんですけど保存されてないんです\n"
-                          "どうしますか?"
-                  ),
+                  content: Text("設定変えられてるんですけど保存されてないんです\n"
+                      "どうしますか?"),
                   actions: <Widget>[
                     FlatButton(
                       child: Text("変えるのやめるわ"),
@@ -48,8 +48,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                     )
                   ],
                 );
-              }
-          );
+              });
           switch (exitCode) {
             case 0:
               Navigator.of(context).pop();
@@ -69,36 +68,36 @@ class _ConfigPageState extends State<ConfigRootView>{
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("設定"),),
-        body:Container(
-          child: FutureBuilder(
-            future: loadConfig(),
-            builder: (BuildContext context, AsyncSnapshot snapshot){
-              if (snapshot.hasData){
-                return snapshot.data;
-              }else if(snapshot.hasError){
-                return Text(snapshot.error.toString());
-              }else{
-                return Container(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              },
-          )
+        appBar: AppBar(
+          title: Text("設定"),
         ),
+        body: Container(
+            child: FutureBuilder(
+          future: loadConfig(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            } else {
+              return Container(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.save),
-          onPressed: () async {
-            saveConfig();
-            Navigator.pop(context);
-          }
-        ),
+            child: Icon(Icons.save),
+            onPressed: () async {
+              saveConfig();
+              Navigator.pop(context);
+            }),
       ),
     );
   }
 
   @override
-  void dispose(){
+  void dispose() {
     summerVacationController.dispose();
     winterVacationController.dispose();
     alertLineController.dispose();
@@ -106,8 +105,8 @@ class _ConfigPageState extends State<ConfigRootView>{
     super.dispose();
   }
 
-  Future saveConfig() async{
-    if (changeAnySetting){
+  Future saveConfig() async {
+    if (changeAnySetting) {
       SharedPreferences pref = await SharedPreferences.getInstance();
       var rawJson = config.toJson();
       String json = jsonEncode(rawJson);
@@ -115,9 +114,9 @@ class _ConfigPageState extends State<ConfigRootView>{
     }
   }
 
-  Future loadConfig() async{
+  Future loadConfig() async {
     // ここにロード処理
-    if(first) {
+    if (first) {
       SharedPreferences pref = await SharedPreferences.getInstance();
       var j = pref.getString("config");
       if (j == null) {
@@ -143,7 +142,7 @@ class _ConfigPageState extends State<ConfigRootView>{
                 subtitle: Text("+ボタンを押すだけで日付も登録されるようにする"),
                 controlAffinity: ListTileControlAffinity.trailing,
                 value: config.smartSet,
-                onChanged: (_){
+                onChanged: (_) {
                   setState(() {
                     config.smartSet = !config.smartSet;
                     changeAnySetting = true;
@@ -151,409 +150,380 @@ class _ConfigPageState extends State<ConfigRootView>{
                 },
               ),
               Divider(),
-
               CheckboxListTile(
                 activeColor: Colors.blue,
                 title: Text("スマートデリート"),
                 subtitle: Text("-ボタンを押すだけで最後に登録したものが消えるようにする"),
                 controlAffinity: ListTileControlAffinity.trailing,
                 value: config.smartDelete,
-                onChanged: (_){
+                onChanged: (_) {
                   setState(() {
                     config.smartDelete = !config.smartDelete;
                     changeAnySetting = true;
                   });
                 },
               ),
-
               Divider(),
               ListTile(
                 title: Text("夏休みの期間"),
                 subtitle: Text("夏休みの期間を週単位で入力してください"),
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text("夏休みの期間"),
-                        content: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "期間",
-                            hintText: "夏休みの期間を入力してください"
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("夏休みの期間"),
+                          content: TextField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "期間",
+                                hintText: "夏休みの期間を入力してください"),
+                            controller: summerVacationController,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly,
+                            ],
                           ),
-                          controller: summerVacationController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter> [
-                            WhitelistingTextInputFormatter.digitsOnly,
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("決定"),
-                            onPressed: (){
-                              String _input = summerVacationController.text;
-                              if (_input.trim() == ""){
-                                return;
-                              }
-                              try{
-                                int num = int.parse(_input);
-                                config.summerVacationLength = num;
-                                changeAnySetting = true;
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("決定"),
+                              onPressed: () {
+                                String _input = summerVacationController.text;
+                                if (_input.trim() == "") {
+                                  return;
+                                }
+                                try {
+                                  int num = int.parse(_input);
+                                  config.summerVacationLength = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                } catch (exception) {
+                                  return;
+                                }
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("キャンセル"),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                              }
-                              catch(exception){
-                               return;
-                              }
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("キャンセル"),
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    }
-                  );
+                              },
+                            )
+                          ],
+                        );
+                      });
                 },
               ),
-
               Divider(),
               ListTile(
                 title: Text("冬休みの期間"),
                 subtitle: Text("冬休みの期間を週単位で入力してください"),
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text("冬休みの期間"),
-                        content: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "期間",
-                            hintText: "冬休みの期間を入力してください"
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("冬休みの期間"),
+                          content: TextField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "期間",
+                                hintText: "冬休みの期間を入力してください"),
+                            controller: winterVacationController,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly,
+                            ],
                           ),
-                          controller: winterVacationController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter> [
-                            WhitelistingTextInputFormatter.digitsOnly,
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("決定"),
-                            onPressed: (){
-                              String _input = winterVacationController.text;
-                              if (_input.trim() == ""){
-                                return;
-                              }
-                              try{
-                                int num = int.parse(_input);
-                                config.winterVacationLength = num;
-                                changeAnySetting = true;
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("決定"),
+                              onPressed: () {
+                                String _input = winterVacationController.text;
+                                if (_input.trim() == "") {
+                                  return;
+                                }
+                                try {
+                                  int num = int.parse(_input);
+                                  config.winterVacationLength = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                } catch (exception) {
+                                  return;
+                                }
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("キャンセル"),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                              }catch(exception){
-                                return;
-                              }
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("キャンセル"),
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    }
-                  );
+                              },
+                            )
+                          ],
+                        );
+                      });
                 },
               ),
               Divider(),
-
               ListTile(
                 title: Text("警告ライン"),
                 subtitle: Text("警告を出す欠課の割合を決定します"),
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text("警告ライン"),
-                        content: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "警告ライン",
-                            hintText: "0[%]から100[%]までの中で警告を出すラインを決めてください"
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("警告ライン"),
+                          content: TextField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "警告ライン",
+                                hintText: "0[%]から100[%]までの中で警告を出すラインを決めてください"),
+                            controller: alertLineController,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly,
+                            ],
                           ),
-                          controller: alertLineController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter> [
-                            WhitelistingTextInputFormatter.digitsOnly,
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("決定"),
-                            onPressed: (){
-                              String _input = alertLineController.text;
-                              if (_input.trim() == ""){
-                                return;
-                              }
-                              double num = double.tryParse(_input) / 100;
-                              if (num < 0 || num > 1) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context){
-                                      print("カス");
-                                      return AlertDialog(
-                                        title: Text("エラー"),
-                                        content: Text(
-                                          "0から100で書けってダイアログに書いたぞ俺",
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text("sry bot"),
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    }
-                                );
-                              } else if (num >= config.redLine) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context){
-                                      return AlertDialog(
-                                        title: Text("エラー"),
-                                        content: Text(
-                                          "警告ラインは留年ラインより低く設定しろカス",
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text("yeah"),
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    }
-                                );
-                              }else {
-                                config.alertLine = num;
-                                changeAnySetting = true;
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("決定"),
+                              onPressed: () {
+                                String _input = alertLineController.text;
+                                if (_input.trim() == "") {
+                                  return;
+                                }
+                                double num = double.tryParse(_input) / 100;
+                                if (num < 0 || num > 1) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        print("カス");
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "0から100で書けってダイアログに書いたぞ俺",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("sry bot"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                } else if (num >= config.redLine) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "警告ラインは留年ラインより低く設定しろカス",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("yeah"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                } else {
+                                  config.alertLine = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("キャンセル"),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                              }
-
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("キャンセル"),
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    }
-                  );
+                              },
+                            )
+                          ],
+                        );
+                      });
                 },
               ),
               Divider(),
-
               ListTile(
                 title: Text("留年ライン"),
                 subtitle: Text("留年が確定する欠課の割合を決定します"),
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text("留年ライン"),
-                        content: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "留年ライン",
-                            hintText: "0[%]から100[%]までの中で留年が確定するラインを決めてください"
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("留年ライン"),
+                          content: TextField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "留年ライン",
+                                hintText:
+                                    "0[%]から100[%]までの中で留年が確定するラインを決めてください"),
+                            controller: redLineController,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly,
+                            ],
                           ),
-                          controller: redLineController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter> [
-                            WhitelistingTextInputFormatter.digitsOnly,
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("決定"),
-                            onPressed: (){
-                              String _input = redLineController.text;
-                              if (_input.trim() == ""){
-                                return;
-                              }
-                            double num = double.tryParse(_input) / 100;
-                            if(num < 0 || num > 1) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context){
-                                    print("カス");
-                                    return AlertDialog(
-                                      title: Text("エラー"),
-                                      content: Text(
-                                        "0から100で書けってダイアログに書いたぞ俺",
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text("sry bro"),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }
-                                );
-                            } else if (config.alertLine >= num) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context){
-                                    print("カス");
-                                    return AlertDialog(
-                                      title: Text("エラー"),
-                                      content: Text(
-                                        "警告ラインは留年ラインより低く設定しろカス",
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text("yeah"),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }
-                                );
-                              } else {
-                                config.redLine = num;
-                                changeAnySetting = true;
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("決定"),
+                              onPressed: () {
+                                String _input = redLineController.text;
+                                if (_input.trim() == "") {
+                                  return;
+                                }
+                                double num = double.tryParse(_input) / 100;
+                                if (num < 0 || num > 1) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        print("カス");
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "0から100で書けってダイアログに書いたぞ俺",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("sry bro"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                } else if (config.alertLine >= num) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        print("カス");
+                                        return AlertDialog(
+                                          title: Text("エラー"),
+                                          content: Text(
+                                            "警告ラインは留年ラインより低く設定しろカス",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("yeah"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      });
+                                } else {
+                                  config.redLine = num;
+                                  changeAnySetting = true;
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("キャンセル"),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                              }
-
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("キャンセル"),
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    }
-                  );
+                              },
+                            )
+                          ],
+                        );
+                      });
                 },
               ),
               Divider(),
-
               ListTile(
                 title: Text("始業日"),
                 subtitle: Text("授業の開始日を指定します"),
-                onTap: () async{
+                onTap: () async {
                   final DateTime cache = await showDatePicker(
                       context: context,
                       initialDate: config.startClass,
                       firstDate: DateTime(2019),
-                      lastDate: DateTime(2100)
-                  );
-                  if (cache != null){
+                      lastDate: DateTime(2100));
+                  if (cache != null) {
                     if (config.endClass.isAfter(cache)) {
                       setState(() {
-                        config.startClass = DateTime(
-                            cache.year,
-                            cache.month,
-                            cache.day
-                        );
+                        config.startClass =
+                            DateTime(cache.year, cache.month, cache.day);
                       });
                       changeAnySetting = true;
-                    }else showDialog(
-                        context: context,
-                        builder: (BuildContext context){
-                          return AlertDialog(
-                            title: Text("エラー"),
-                            content: Text(
-                              "始業の前に終業する特殊な学校には対応していません",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text("yeah"),
-                                onPressed: (){
-                                  Navigator.pop(context);
-                                },
-                              )
-                            ],
-                          );
-                        }
-                    );
+                    } else
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("エラー"),
+                              content: Text(
+                                "始業の前に終業する特殊な学校には対応していません",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("yeah"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            );
+                          });
                   }
                 },
               ),
               Divider(),
-
               ListTile(
                 title: Text("終業日"),
                 subtitle: Text("授業の終了日を指定します"),
-                onTap: () async{
+                onTap: () async {
                   final DateTime cache = await showDatePicker(
                       context: context,
                       initialDate: config.endClass,
                       firstDate: DateTime(2019),
-                      lastDate: DateTime(2100)
-                  );
-                  if (cache != null){
+                      lastDate: DateTime(2100));
+                  if (cache != null) {
                     if (config.startClass.isBefore(cache)) {
                       setState(() {
-                        config.endClass = DateTime(
-                            cache.year,
-                            cache.month,
-                            cache.day
-                        );
+                        config.endClass =
+                            DateTime(cache.year, cache.month, cache.day);
                       });
                       changeAnySetting = true;
-                    }else showDialog(
-                        context: context,
-                        builder: (BuildContext context){
-                          return AlertDialog(
-                            title: Text("エラー"),
-                            content: Text(
-                              "始業の前に終業する特殊な学校には対応していません",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text("yeah"),
-                                onPressed: (){
-                                  Navigator.pop(context);
-                                },
-                              )
-                            ],
-                          );
-                        }
-                    );
+                    } else
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("エラー"),
+                              content: Text(
+                                "始業の前に終業する特殊な学校には対応していません",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("yeah"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            );
+                          });
                   }
                 },
               )
