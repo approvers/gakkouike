@@ -13,8 +13,8 @@ class CardsContents extends StatelessWidget {
   final Subject subject;
   final Config config;
   final VoidCallback onTap;
-  final void Function(DateTime) onAddAbsence;
-  final void Function(int) onDeleteAbsence;
+  final void Function(DateTime toAdd) onAddAbsence;
+  final void Function(int indexToDelete) onDeleteAbsence;
 
   @override
   Widget build(BuildContext context) {

@@ -76,21 +76,22 @@ class _HomePageContentsState extends State<HomePageContents> {
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
+        var subject = subjects[index];
         return CardsContents(
-            subject: subjects[index],
+            subject: subject,
             config: config,
             onTap: () {
               Navigator.of(context).push(new MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      SubjectAdder(subject: subjects[index], index: index)));
+                      SubjectAdder(subject: subject, index: index)));
             },
-            onAddAbsence: (DateTime time) async {
-              subjects[index].absenceDates.add(time);
+            onAddAbsence: (DateTime toAdd) async {
+              subject.absenceDates.add(toAdd);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             },
-            onDeleteAbsence: (int index) async {
-              subjects[index].absenceDates.removeAt(index);
+            onDeleteAbsence: (int indexToDelete) async {
+              subject.absenceDates.removeAt(indexToDelete);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             });
