@@ -14,8 +14,8 @@ class CancelClassCard extends StatelessWidget {
   final Config config;
   final Size size;
   final Subject subject;
-  final Function(DateTime) onAddCancelClass;
-  final Function(int) onRemoveCancelClass;
+  final Function(DateTime toAdd) onAddCancelClass;
+  final Function(int indexToRemove) onRemoveCancelClass;
 
   @override
   Widget build(BuildContext context) {

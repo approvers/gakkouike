@@ -56,17 +56,17 @@ class _CancelManagerRootState extends State<CancelManagerRoot> {
             config: config,
             size: size,
             subject: subject,
-            onAddCancelClass: (DateTime time) async {
+            onAddCancelClass: (DateTime toAdd) async {
               List<Subject> subjects =
                   await SubjectPreferenceUtil.getSubjectListFromPref();
-              subjects[index].cancelClasses.add(time);
+              subjects[index].cancelClasses.add(toAdd);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             },
-            onRemoveCancelClass: (int index) async {
+            onRemoveCancelClass: (int indexToRemove) async {
               List<Subject> subjects =
                   await SubjectPreferenceUtil.getSubjectListFromPref();
-              subjects[index].cancelClasses.removeAt(index);
+              subjects[index].cancelClasses.removeAt(indexToRemove);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             });
