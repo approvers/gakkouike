@@ -86,12 +86,16 @@ class _HomePageContentsState extends State<HomePageContents> {
                       SubjectAdder(subject: subject, index: index)));
             },
             onAddAbsence: (DateTime toAdd) async {
-              subject.absenceDates.add(toAdd);
+              var subjects =
+                  await SubjectPreferenceUtil.getSubjectListFromPref();
+              subjects[index].absenceDates.add(toAdd);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             },
             onDeleteAbsence: (int indexToDelete) async {
-              subject.absenceDates.removeAt(indexToDelete);
+              var subjects =
+                  await SubjectPreferenceUtil.getSubjectListFromPref();
+              subjects[index].absenceDates.removeAt(indexToDelete);
               await SubjectPreferenceUtil.saveSubjectList(subjects);
               setState(() {});
             });
